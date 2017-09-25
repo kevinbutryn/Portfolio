@@ -3,6 +3,7 @@ public class HugeInteger {
 
 	int[] digits = new int[40];
 	int num_length = 0;
+	boolean isNegative = false;
 	
 	public HugeInteger(String num) {
 		parse(num);
@@ -20,7 +21,14 @@ public class HugeInteger {
 	
 	public void update()
 	{
-		num_length = (toString()).length();
+		String number = toString();
+		num_length = number.length();
+		if (number.charAt(num_length-1) == '-');
+		{
+			num_length -= 1;
+			isNegative = true;
+		}
+		
 		System.out.println("the length is now "+ num_length);
 	}
 	
@@ -114,6 +122,10 @@ public class HugeInteger {
 	}
 	
 	public boolean isGreaterThan(HugeInteger number) { 
+		if (isNegative != number.isNegative) {
+			return number.isNegative;
+		}
+		
 		if (num_length > number.num_length) {
 			return true;
 		}
@@ -128,6 +140,9 @@ public class HugeInteger {
 	}
 	
 	public boolean isLessThan(HugeInteger number) { 
+		if (isNegative != number.isNegative) {
+			return isNegative;
+		}
 		if (num_length < number.num_length) {
 			return true;
 		}
