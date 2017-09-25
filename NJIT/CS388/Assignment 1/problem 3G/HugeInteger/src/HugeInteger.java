@@ -52,6 +52,16 @@ public class HugeInteger {
 	
 	public void add(HugeInteger number) {
 	
+		
+		if (isNegative != number.isNegative)
+		{
+			//if(num_length > number.num_length)
+			//	subtract
+			//else
+				
+		}
+		
+		
 		for(int x = 0; x < 40; x++) {
 			
 			digits[x] += number.digits[x];
