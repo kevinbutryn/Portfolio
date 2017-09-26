@@ -1,4 +1,13 @@
+
+
 <?php
+	//MIDDLE.PHP - Kevin Butryn (kb295)
+	//This project was a 3 person Team effort
+	// Front end would get login information to pass to middle end
+	// middle end would login to njit, and also pass on login to back end
+	// back end checks database and middle end forwards both results to front
+	
+
 	// get username and password from frontend
 	$user = $_GET["user"];
 	$pass = $_GET["pass"];
@@ -21,7 +30,7 @@
         CURLOPT_RETURNTRANSFER => true,
          ));
 	
-	// set default to false	
+	// set default answers to false	
 	$ans1 = "false";
 	$ans2 = "false";
 
@@ -36,14 +45,12 @@
 	$result2 = curl_exec($curl2);
 	curl_close($curl2);
 	
-	
-	// set output if true
+	// set output if login successful
 	if (strpos($result2, 'Successful') !== false){
 	$ans2 = "true"; 
 	}
 	
 	// send results to frontend
-
 	$answers = array();
 	$answers[] = array(
 	'answer_db' => $ans1,
