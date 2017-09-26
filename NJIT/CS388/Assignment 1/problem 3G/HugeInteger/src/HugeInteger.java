@@ -55,10 +55,8 @@ public class HugeInteger {
 		
 		if (isNegative != number.isNegative)
 		{
-			//if(num_length > number.num_length)
-			//	subtract
-			//else
-				
+				number.isNegative = !number.isNegative;
+				subtract(number);
 		}
 		
 		
