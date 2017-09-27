@@ -45,6 +45,10 @@ public class HugeInteger {
 		}
 		
 		answer = answer.replaceFirst ("^0*", "");
+		
+		if (isNegative == true)
+			answer = "-" + answer;
+		
 		if (answer.isEmpty()) 
 			answer = "0";
 		return answer;
@@ -57,6 +61,7 @@ public class HugeInteger {
 		{
 				number.isNegative = !number.isNegative;
 				subtract(number);
+				number.isNegative = !number.isNegative;
 		}
 		
 		
@@ -82,36 +87,57 @@ public class HugeInteger {
 	public void subtract(HugeInteger number) {
 		int bound;
 		
+		if (isNegative != number.isNegative)
+		{
+				number.isNegative = !number.isNegative;
+				add(number);
+				number.isNegative = !number.isNegative;
+		}
 		
-		if(num_length > number.num_length)
-			bound  = num_length;
-		else
-			bound = number.num_length;
-		
-		
-		for(int x = 0; x <= bound; x++) {
-			digits[x] = digits[x] - number.digits[x];
-			
-			if (digits[x] < 0) {
+		if (isGreaterThan(number))
+		{
+			for(int x = 0; x <= num_length; x++) {
+				digits[x] = digits[x] - number.digits[x];
 				
-				if ((x+1) <= num_length)
+				if (digits[x] < 0) {
+					
+					if ((x+1) <= num_length)
+						{
+						update();
+						break;
+						}
+					else
 					{
-					update();
-					break;
+					digits[x] += 10;
+					
+					
+					if((x+1) == 40) {
+						System.out.println("ERROR: number will exceed 40 digits");
 					}
-				else
-				{
-				digits[x] += 10;
-				
-				
-				if((x+1) == 40) {
-					System.out.println("ERROR: number will exceed 40 digits");
-				}
-				else {
-				digits[x+1] -= 1;
-				}
+					else {
+					digits[x+1] -= 1;
+					}
+					}
 				}
 			}
+		}
+		else
+		{
+			for(int x = 0; x <= number.num_length; x++) {
+				digits[x] = digits[x] - number.digits[x];
+				}
+			for(int x = 0; x <= number.num_length; x++)
+			{
+				if (digits[x] > 0) {
+					digits[x] -= 10;
+					digits[x+1] += 1;	
+				}
+				
+				
+					digits[x] = digits[x] * (-1);
+					
+			}
+			isNegative = !isNegative;
 		}
 	}
 	
