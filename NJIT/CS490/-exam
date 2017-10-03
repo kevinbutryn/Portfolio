@@ -1,0 +1,38 @@
+-exam 
+
+write a website to make exams using open ended questions. 
+html text area to write code
+"write a function that takes in a and b, and returns x"
+
+two logins. instructor and student(2-3)
+instructor
+-make up new quesirons, added to question bank
+- stored in database
+- select questions to mkae exams 
+
+student
+- take exam 
+
+instructor must release scores
+-auto grade when score is released. 
+
+student 
+-log in to see scores and why it was wrong 
+
+questions 
+- loops? 
+
+test cases
+- codingbat.com 
+
+
+php_exec 
+
+grading is middle. 
+unit testing? 
+
+
+--------------------------------------------------
+uber for tutoring 
+--------------------------------------------------
+rate my professor only for njit users 
