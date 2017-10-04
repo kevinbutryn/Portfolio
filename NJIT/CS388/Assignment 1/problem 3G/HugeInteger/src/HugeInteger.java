@@ -14,8 +14,14 @@ public class HugeInteger {
 		num_length = num.length();
 		int y=0;
 		for (int x = num_length-1; x >= 0;x--) {
+			if (num.charAt(x) == '-') {
+				isNegative = true;
+				num_length --;
+			}
+			else {
 			digits[y] = (int)(num.charAt(x)-'0'); 
 			y++;
+			}
 		}
 	}
 	
@@ -25,32 +31,31 @@ public class HugeInteger {
 		num_length = number.length();
 		if (number.charAt(num_length-1) == '-');
 		{
+			number.substring(0, num_length-1);
 			num_length -= 1;
 			isNegative = true;
 		}
 		
-		System.out.println("the length is now "+ num_length);
 	}
 	
 	public String toString() {
 		String answer = "";
 		
 		for (int x = 0; x < 40;x++) {
-			
-			//if (x % 3 == 0) {
-		//		if(x != 0) {
-			//	answer = "," + answer;}
-			//}
+		
 			answer = (digits[x]) + answer;
 		}
 		
 		answer = answer.replaceFirst ("^0*", "");
 		
+		if (answer.isEmpty()) 
+		{
+			answer = "0";
+			num_length = 1;
+			isNegative = false;
+		}
 		if (isNegative == true)
 			answer = "-" + answer;
-		
-		if (answer.isEmpty()) 
-			answer = "0";
 		return answer;
 	}
 	
@@ -62,6 +67,8 @@ public class HugeInteger {
 				number.isNegative = !number.isNegative;
 				subtract(number);
 				number.isNegative = !number.isNegative;
+				update();
+				return;
 		}
 		
 		
@@ -85,13 +92,14 @@ public class HugeInteger {
 	}
 	
 	public void subtract(HugeInteger number) {
-		int bound;
-		
+	
 		if (isNegative != number.isNegative)
 		{
 				number.isNegative = !number.isNegative;
 				add(number);
 				number.isNegative = !number.isNegative;
+				update();
+				return;
 		}
 		
 		if (isGreaterThan(number))
@@ -139,10 +147,11 @@ public class HugeInteger {
 			}
 			isNegative = !isNegative;
 		}
+		update();
 	}
 	
 	public boolean isEqualTo(HugeInteger number) {
-		if (num_length != number.num_length) {
+		if (isNegative != number.isNegative) {
 			return false;
 		}
 		
@@ -160,9 +169,7 @@ public class HugeInteger {
 			return number.isNegative;
 		}
 		
-		if (num_length > number.num_length) {
-			return true;
-		}
+		System.out.println( num_length + " length");
 				
 		for (int x = num_length-1; x >= 0;x--) {
 			if (digits[x] < number.digits[x])
@@ -177,9 +184,7 @@ public class HugeInteger {
 		if (isNegative != number.isNegative) {
 			return isNegative;
 		}
-		if (num_length < number.num_length) {
-			return true;
-		}
+		
 		
 		for (int x = num_length-1; x >= 0;x--) {
 			if (digits[x] > number.digits[x])
