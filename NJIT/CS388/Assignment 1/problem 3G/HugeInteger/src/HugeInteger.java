@@ -23,16 +23,19 @@ public class HugeInteger {
 			y++;
 			}
 		}
+		
 	}
 	
 	public void update()
 	{
 		String number = toString();
 		num_length = number.length();
-		if (number.charAt(num_length-1) == '-');
+		
+		if (number.charAt(num_length-1) == '-')
 		{
+			
 			number.substring(0, num_length-1);
-			num_length -= 1;
+			num_length = number.length();
 			isNegative = true;
 		}
 		
@@ -92,7 +95,6 @@ public class HugeInteger {
 	}
 	
 	public void subtract(HugeInteger number) {
-	
 		if (isNegative != number.isNegative)
 		{
 				number.isNegative = !number.isNegative;
@@ -104,7 +106,8 @@ public class HugeInteger {
 		
 		if (isGreaterThan(number))
 		{
-			for(int x = 0; x <= num_length; x++) {
+			
+			for(int x = 0; x <= 39; x++) {
 				digits[x] = digits[x] - number.digits[x];
 				
 				if (digits[x] < 0) {
@@ -131,7 +134,7 @@ public class HugeInteger {
 		}
 		else
 		{
-			for(int x = 0; x <= number.num_length; x++) {
+			for(int x = 0; x <= number.num_length-1; x++) {
 				digits[x] = digits[x] - number.digits[x];
 				}
 			for(int x = 0; x <= number.num_length; x++)
@@ -169,12 +172,24 @@ public class HugeInteger {
 			return number.isNegative;
 		}
 		
-		System.out.println( num_length + " length");
-				
+		
+		if(num_length > number.num_length)
+			return true; 
+		else if(num_length < number.num_length)
+			return false;
+	
 		for (int x = num_length-1; x >= 0;x--) {
-			if (digits[x] < number.digits[x])
-				return false;
+			
+			
+			if (digits[x] > number.digits[x])
+			{
+				
+				return true;
+			}
+		
 		}
+		
+		
 		if (digits[0] == number.digits[0])
 			return false;
 		return true;
@@ -185,11 +200,17 @@ public class HugeInteger {
 			return isNegative;
 		}
 		
+		if(num_length < number.num_length)
+			return true; 
+		else if(num_length > number.num_length)
+			return false;
 		
 		for (int x = num_length-1; x >= 0;x--) {
-			if (digits[x] > number.digits[x])
-				return false;
+			
+			if (digits[x] < number.digits[x])
+				return true;
 		}
+		
 		if (digits[0] == number.digits[0])
 			return false;
 		return true;
