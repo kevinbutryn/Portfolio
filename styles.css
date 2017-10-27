@@ -1,17 +1,25 @@
 body {
-	background-color:Gray;
+	background-color:black;
 	font-family: verdana;
+}
+div{
+	background-color:gray;
+	color:black;
+	padding:20px;
 }
 h1{
 	text-align:center;
 	font-family: verdana;
 }
 h2{
+	text-align:center;
 	font-family: verdana;
 }
 h3{
+	text-align:center;
 	font-family: verdana;
 } 
 p{
+	text-align:center;
 	font-family: verdana;
 }
