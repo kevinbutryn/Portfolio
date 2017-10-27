@@ -9,7 +9,6 @@ public class DeckOfCards {
 	 private static final Random randomNumbers = new Random();
 	
 	 // constructor fills deck of Cards
-	 
 	 public DeckOfCards()
 	 {
 		 String[] faces = { "Ace", "Deuce", "Three", "Four", "Five", "Six",
@@ -24,8 +23,7 @@ public class DeckOfCards {
 				 deck[ count ] =
 				 new Card( faces[ count % 13 ], suits[ count / 13 ] );
 	 }
-	 
-	// shuffle deck of Cards with one-pass algorithm
+	 // shuffle deck of Cards with one-pass algorithm
 	  public void shuffle()
 	  {
 		// after shuffling, dealing should start at deck[ 0 ] again

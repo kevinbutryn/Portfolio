@@ -32,8 +32,8 @@ public class Main {
 		System.out.println();
 		
 		
-		num1.add(num2);
-		System.out.printf("A + B equals: %s\n", num1.toString());
+		//num1.add(num2);
+		//System.out.printf("A + B equals: %s\n", num1.toString());
 		System.out.println();
 		System.out.printf("Number A equals: %s\n",num1.toString());
 		System.out.printf("Number B equals: %s\n",num2.toString());
