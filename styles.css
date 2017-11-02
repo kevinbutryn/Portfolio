@@ -1,30 +1,40 @@
-body {
-	background-color:black;
-	font-family: verdana;
-}
-div{
-	background-color:gray;
-	color:black;
-	padding:20px;
-}
-h1{
-	text-align:center;
-	font-family: verdana;
-}
-h2{
-	text-align:center;
-	font-family: verdana;
-}
-h3{
-	text-align:center;
-	font-family: verdana;
-} 
-p{
-	text-align:center;
-	font-family: verdana;
-}
 #img01{
 	display: block;
     margin: auto;
-	border: 5px solid powderblue;
+	border: 5px solid orange;
+}
+div.container {
+    width: 100%;
+    border: 1px solid gray;
+}
+
+header, footer {
+    padding: 1em;
+    color: orange;
+    background-color: gray;
+    clear: left;
+    text-align: center;
+}
+
+nav {
+    float: left;
+    max-width: 160px;
+    margin: 0;
+    padding: 1em;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+   
+nav ul a {
+    text-decoration: none;
+}
+
+article {
+    margin-left: 170px;
+    border-left: 1px solid gray;
+    padding: 1em;
+    overflow: hidden;
 }
