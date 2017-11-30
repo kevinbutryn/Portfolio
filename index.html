@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <head>
 	<title> Kevin's Portfolio</title>
-	<link rel="stylesheet" href="styles.css">
 	<meta name="description" content="Portfolio of programming work">
 	<meta name="author" content="Kevin Butryn">
 	<meta http-equiv="refresh" content="30">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	 <title>Materialize CSS Framework Demo</title>
-  	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+  	<!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
- 	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-  	<link type="text/css" rel="stylesheet" href="css/style.css">
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <!-- 
 	idea for website
@@ -24,21 +25,40 @@
 
 <body>
 
-	 <!-- jQuery is required by Materialize to function -->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="js/materialize.min.js"></script>
-  <script type="text/javascript">
-    //custom JS code
-  </script>
-
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <script type="text/javascript" src="js/materialize.min.js"></script>
+	
 	<div class="container">
+
+
+	<div class="intro deep-orange lighten-2 z-depth-1">
+ 	 <h1 class="grey-text text-lighten-5">Kevin Butryn's</h1>
+ 	 <h5 class="grey lighten-4 grey-text text-darken-1">Portfolio</h5>
+	</div>
+
 
 	<header>
 		<h1>Kevin Butryn's Protfolio</h1>
-		<img id="img01" src="images/kevinsPortrait.JPG" align="middle" alt="Portrait photo of Kevin Butryn" style="width:auto;height:400px;">
+		<img id="img01" src="images/kevinssPortrait.JPG" align="middle" alt="Portrait photo of Kevin Butryn" style="width:auto;height:400px;">
 	</header>
 
-	<nav>
+	
+
+
+
+
+
+
+
+	<ul id="slide-out" class="side-nav full">
+ 	 <li><a href="#!">First Sidebar Link</a></li>
+ 	 <li><a href="#!">Second Sidebar Link</a></li>
+	</ul>
+
+	<a href="#" data-activates="slide-out" class="button-collapse">
+ 	 <i class="large mdi-navigation-menu"></i>
+	</a>
 		<h2>List of projects</h2>
 			<h3>NJIT projects</h3>
 				<ul style="list-style-type:none;text-align:center;">
@@ -49,9 +69,9 @@
 			<h3>Outside projects</h3>
 				<p>This website</p>
 				<p>Practice coding problems</p>
-	</nav>
+	
 
-	<article>
+	
 		<h2>About: </h2>
 			<p>Im a senior at the New Jersey Instituit of Technology studying Computer Science.</p>
 			<p><a href="">Resume link</a></p>
@@ -67,7 +87,7 @@
 			<div class="card-panel">
   			<span class="blue-text text-darken-2">This is a card panel with dark blue text</span>
 			</div>
-	</article>
+	
 
 	<footer> Kevin Butryn </footer>
 
