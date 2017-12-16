@@ -5094,6 +5094,8 @@ button:focus {
   outline: 0 !important; }
 
 .btn {
+  align-items: center;
+  
   font-size: 0.8rem;
   padding: 0.85rem 2.13rem;
   margin: 6px;
@@ -5173,6 +5175,7 @@ button:focus {
     box-shadow: none; }
 
 .btn-primary {
+  align-self: center;
   background-color: #4285F4; }
   .btn-primary:hover {
     background-color: #5a95f5 !important; }
