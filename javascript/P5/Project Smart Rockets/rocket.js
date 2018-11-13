@@ -1,13 +1,15 @@
 function Rocket(dna)
 {
 
-	this.pos = createVector(width/2, height);
+	this.pos = createVector(width/2, height-10);
 	this.vel = createVector();	
 	this.acc = createVector();
 	this.count = 0;
 	this.fitness = 0;
 	this.completed = false;
 	this.crashed = false;
+	this.maxFitness = 0;
+	this.col = [255,0,0]
 
 	if (dna)
 	{
@@ -66,6 +68,9 @@ function Rocket(dna)
 			//this.fitness = 1;
 		}
 
+		if (this.maxFitness < this.fitness	 ){
+			this.maxFitness	= this.fitness;
+		}
 	}
 
 	this.show = function(){
@@ -83,7 +88,7 @@ function Rocket(dna)
 		triangle(-10,2,-10,-2,10,0)
 		//rect(0,0, 20,4);
 
-		fill(255,0,0,100)
+		fill(this.col[0],this.col[1],this.col[2],100)
 		triangle(-10,8,-10,-8,0,0)
 
 		pop();

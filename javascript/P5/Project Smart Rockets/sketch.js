@@ -1,7 +1,7 @@
 var population;
 var target;
 var count = 0;
-var lifeSpan = 400;
+var lifeSpan = 500;
 var lifeP;
 var genP;
 var genCompletedP;
@@ -11,7 +11,9 @@ var generationCompleted = 0;
 var mutationRate = .01;
 var foundPath = false;
 var obstacles;
-var numObstales = 10;
+var numObstales = 100;
+
+
 
 var rx = 150;
 var ry = 250;
@@ -20,7 +22,7 @@ var rh = 10;
 
 
 function setup() {
-  createCanvas(600,600); 
+  createCanvas(800,800); 
   population = new Population();
   obstacles = new Obstacles(numObstales);
   target = createVector(width/2,50);
@@ -51,7 +53,7 @@ function draw() {
   		if(foundPath){
   			genCompletedP.html("generationCompleted : " + generationCount + " at " + lifeSpan)
   			foundPath = false;
- 		 	lifeSpan = lifeSpan - 10;
+ 		 	//lifeSpan = lifeSpan - 10;
  		 }
 
 
