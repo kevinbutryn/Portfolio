@@ -63,8 +63,11 @@ function draw() {
 
   //iterate through vehicles
   for (var i = vehicles.length - 1; i >= 0; i--) {
-    vehicles[i].boundaries();
+    //vehicles[i].boundaries();
+
+    //find direction to move
     vehicles[i].behaviors(food, poison);
+    //move direction
     vehicles[i].update();
     vehicles[i].display();
 

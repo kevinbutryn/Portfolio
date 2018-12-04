@@ -53,6 +53,8 @@ function Vehicle(x, y, dna) {
     this.position.add(this.velocity);
     // Reset accelerationelertion to 0 each cycle
     this.acceleration.mult(0);
+
+    //eat poison/food/prey if in certain range
   }
 
   this.applyForce = function(force) {
@@ -63,12 +65,27 @@ function Vehicle(x, y, dna) {
   this.behaviors = function(good, bad) {
     var steerG = this.eat(good, 0.2, this.dna[2]);
     var steerB = this.eat(bad, -1, this.dna[3]);
+    this.boundaries();
 
     steerG.mult(this.dna[0]);
     steerB.mult(this.dna[1]);
 
     this.applyForce(steerG);
     this.applyForce(steerB);
+
+    //pick a direction to go based on food, poison, threats/predators, obstacles?
+
+    //pick steering
+      //runaway (poison and predators)
+        //primary objective. dont die
+      //hunt for food(food or other vehicles)
+        //depending on health. may be weighed more
+        //food closer weighs more
+        //prevent infinte running away
+      //boundaries
+        // move away from the boundaries
+
+    //apply force depending on what option  
   }
 
   this.clone = function() {
@@ -165,7 +182,7 @@ function Vehicle(x, y, dna) {
 
 
   this.boundaries = function() {
-    var d = 300;
+    var d = 25;
 
     var desired = null;
 
