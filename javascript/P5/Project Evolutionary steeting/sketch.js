@@ -6,27 +6,28 @@ var poison = [];
 var debug;
 
 function setup() {
-  createCanvas(640, 360);
+  createCanvas(1500,1000);
   for (var i = 0; i < 50; i++) {
     var x = random(width);
     var y = random(height);
     vehicles[i] = new Vehicle(x, y);
   }
   // initial food
-  for (var i = 0; i < 40; i++) {
+  for (var i = 0; i < 2000; i++) {
     var x = random(width);
     var y = random(height);
     food.push(createVector(x, y));
   }
 
   //initial posion
-  for (var i = 0; i < 20; i++) {
+  for (var i = 0; i < 500; i++) {
     var x = random(width);
     var y = random(height);
     poison.push(createVector(x, y));
   }
 
   debug = createCheckbox();
+  debug.checked(true);
 }
 
 
@@ -67,16 +68,20 @@ function draw() {
     vehicles[i].update();
     vehicles[i].display();
 
-    //var newVehicle = vehicles[i].clone();
-    //if (newVehicle != null) {
-    //  vehicles.push(newVehicle);
-    //}
+    var newVehicle = vehicles[i].clone();
+    if (newVehicle != null) {
+      vehicles.push(newVehicle);
+    }
 
     if (vehicles[i].dead()) {
       var x = vehicles[i].position.x;
       var y = vehicles[i].position.y;
       //food.push(createVector(x, y));
       vehicles.splice(i, 1);
+    }
+    if (vehicles.length == 0)
+    {
+      setup();
     }
 
   }

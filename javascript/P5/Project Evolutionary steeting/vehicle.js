@@ -72,7 +72,7 @@ function Vehicle(x, y, dna) {
   }
 
   this.clone = function() {
-    if (random(1) < 0.002) {
+    if (random(1) < 0.004 * this.health / 100) {
       return new Vehicle(this.position.x, this.position.y, this.dna);
     } else {
       return null;
@@ -165,7 +165,7 @@ function Vehicle(x, y, dna) {
 
 
   this.boundaries = function() {
-    var d = 25;
+    var d = 300;
 
     var desired = null;
 
