@@ -6,8 +6,9 @@ function Vehicle(x, y, dna) {
   this.velocity = createVector(0, -2);
   this.position = createVector(x, y);
   this.r = 4;
-  this.maxspeed = 5;
+  this.maxspeed = 4;
   this.maxforce = 0.5;
+  this.timeAlive = 0;
 
   this.health = 1;
 
@@ -45,6 +46,7 @@ function Vehicle(x, y, dna) {
   this.update = function() {
 
     this.health -= 0.005;
+    this.timeAlive++;
 
     // Update velocity
     this.velocity.add(this.acceleration);
@@ -64,16 +66,55 @@ function Vehicle(x, y, dna) {
 
   this.behaviors = function(good, bad) {
     var steerG = this.eat(good, 0.2, this.dna[2]);
-    var steerB = this.eat(bad, -1, this.dna[3]);
-    this.boundaries();
-
     steerG.mult(this.dna[0]);
+
+    var steerB = this.eat(bad, -1, this.dna[3]);
     steerB.mult(this.dna[1]);
+
+    var steerBoundary = this.boundaries();
+    
+    
+    
 
     this.applyForce(steerG);
     this.applyForce(steerB);
+    
+
+    if (steerBoundary !== null)
+    {
+      this.applyForce(steerBoundary);
+      //Action = "boundary";
+    }
+
+
+
+    // order of operations
+
+    // explore: default
+    
+    // if see food go toward food and if see poison, go away from poison
+
+
+    // switch(Action)
+    // {
+    //   case boundary:  
+    //     break;      
+    //   case avoid:
+    //     break;
+    //   case eat:
+    //     break;
+    //   case explore:
+    //     break;
+    //   case default:
+    //     //do something
+    // }
+
 
     //pick a direction to go based on food, poison, threats/predators, obstacles?
+
+  
+
+    
 
     //pick steering
       //runaway (poison and predators)
@@ -182,28 +223,36 @@ function Vehicle(x, y, dna) {
 
 
   this.boundaries = function() {
-    var d = 25;
+    
+    var centerPoint = createVector(width / 2, height / 2);
 
     var desired = null;
 
-    if (this.position.x < d) {
-      desired = createVector(this.maxspeed, this.velocity.y);
-    } else if (this.position.x > width - d) {
-      desired = createVector(-this.maxspeed, this.velocity.y);
+    if (this.position.x < boundary) {
+      //desired = createVector(this.maxspeed, this.velocity.y);
+       return this.seek(centerPoint);
+    } else if (this.position.x > width - boundary) {
+      //desired = createVector(-this.maxspeed, this.velocity.y);
+      return this.seek(centerPoint);
     }
 
-    if (this.position.y < d) {
-      desired = createVector(this.velocity.x, this.maxspeed);
-    } else if (this.position.y > height - d) {
-      desired = createVector(this.velocity.x, -this.maxspeed);
+    if (this.position.y < boundary) {
+      //desired = createVector(this.velocity.x, this.maxspeed);
+      return this.seek(centerPoint);
+    } else if (this.position.y > height - boundary) {
+      //desired = createVector(this.velocity.x, -this.maxspeed);
+      return this.seek(centerPoint);
     }
+    
+      return null   
+    
 
-    if (desired !== null) {
-      desired.normalize();
-      desired.mult(this.maxspeed);
-      var steer = p5.Vector.sub(desired, this.velocity);
-      steer.limit(this.maxforce);
-      this.applyForce(steer);
-    }
+    // if (desired !== null) {
+    //   desired.normalize();
+    //   desired.mult(this.maxspeed);
+    //   var steer = p5.Vector.sub(desired, this.velocity);
+    //   steer.limit(this.maxforce);
+    //   return steer
+    // }
   }
 }
