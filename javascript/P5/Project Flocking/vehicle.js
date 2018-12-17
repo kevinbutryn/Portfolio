@@ -6,8 +6,8 @@ function Vehicle(x, y, dna) {
   this.velocity = createVector(0, 0);
   this.position = createVector(x, y);
   this.r = 4;
-  this.maxspeed = 4;
-  this.maxforce = 0.5;
+  this.maxspeed = 2;
+  this.maxforce = .5;
   
 
   // Method to update location
@@ -32,10 +32,38 @@ function Vehicle(x, y, dna) {
     //var steer = this.seek(createVector(this.position.x-1, this.position.y));
     
     //this.applyForce(steer);  
+    this.allign();
 
   }
 
   this.allign = function() {
+    var  flockSize = 100
+    var  totalDesired = createVector();
+    var  avgDesired = createVector();
+    var flockNumber = 0;
+
+    for (var i = 0;i < vehicles.length ;i++)
+    {
+      var other = vehicles[i];
+      var distance = dist(this.position.x,this.position.y,other.position.x,other.position.y);
+
+      if (distance < flockSize && other != this){
+        totalDesired.add(other.velocity);
+        flockNumber++;
+      }
+
+    }
+
+    if (flockNumber > 0)
+    {
+      avgDesired = totalDesired.div(flockNumber);
+      avgDesired.setMag(this.maxspeed);
+      avgDesired.sub(this.velocity);
+      avgDesired.limit(this.maxForce);
+      
+      this.applyForce(avgDesired);
+    }
+    
     
   }
 

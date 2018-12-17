@@ -1,19 +1,19 @@
 
 var vehicles = [];
-var vehicleCount = 1;
+var vehicleCount = 300;
 
 
 function setup() {
-  createCanvas(800,800);
+  createCanvas(1500,1500);
   for (var i = 0; i < vehicleCount; i++) {
-    //var x = random(width);
-    //var y = random(height);
-    var x = width/2;
-    var y = height/2;
+    var x = random(width);
+    var y = random(height);
+    //var x = width/2;
+    //var y = height/2;
 
     vehicles[i] = new Vehicle(x, y);
     vehicles[i].velocity = createVector(random(-1,1), random(-1,1));
-    console.log(vehicles[i].velocity.heading() + (PI / 2)); 
+    //console.log(vehicles[i].velocity.heading() + (PI / 2)); 
   }
     
 }
