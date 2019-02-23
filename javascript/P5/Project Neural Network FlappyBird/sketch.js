@@ -1,13 +1,15 @@
 
 var bird;
-var pipe;
+var pipes = []; 
+var counter = 59;
 
 
 function setup() {
   createCanvas(550,600);
 
+
   bird = new Bird();
-  pipe = new pipe();
+  //pipe = new pipe();
     
 }
 
@@ -15,13 +17,29 @@ function setup() {
 function draw() {
   background(55,230,230);
 
-  bird.show();
-  bird.update();
-  
+  if (counter % 60 == 0)
+  {
+    pipes.push(new pipe());
+  }
 
-  pipe.show();
-  pipe.update();
-    
+
+  
+  bird.show();
+  bird.update();  
+
+  for(var i = pipes.length-1; i >= 0 ; i--){
+
+    pipes[i].show();
+    pipes[i].update();
+
+    if (pipes[i].offscreen())
+    {
+      pipes.splice(i,1);
+    }
+  }
+  
+  
+    counter++;
 }
 
 function keyPressed() {
