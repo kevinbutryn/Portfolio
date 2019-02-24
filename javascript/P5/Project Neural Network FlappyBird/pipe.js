@@ -1,22 +1,19 @@
 
 function pipe(){
 
-    this.width = 20;
+    this.w = 20;
     this.speed = 2;
     this.opening = 125;
     this.x = width;
     this.y = 0
-    this.bottom_opening = random(height*.2,height*.8);
-    this.top_opening = this.bottom_opening + this.opening;
+    this.top_opening = random(height*.1,height*.7);
+    this.bottom_opening = this.top_opening + this.opening;
 
 
     this.show = function(){
         fill(55,180,60);
-        rect (this.x,this.y,this.width,this.bottom_opening);
-        rect (this.x,this.top_opening,this.width,height);
-
-
-
+        rect (this.x,this.y,this.w,this.top_opening); // top rectangle
+        rect (this.x,this.bottom_opening,this.w,height); // bottom rectangle
     }
 
     this.update = function(){
@@ -24,7 +21,7 @@ function pipe(){
     }
 
     this.offscreen = function(){
-        if (this.x + this.width < 0)
+        if (this.x + this.w < 0)
         {
             return true;
         }
@@ -34,4 +31,7 @@ function pipe(){
         }
     }
 
+
+
 }
+
