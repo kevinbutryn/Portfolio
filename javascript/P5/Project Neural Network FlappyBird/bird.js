@@ -1,35 +1,44 @@
 var gravity = -.5;
 var lift = 12;
-var velocity = 0
 var maxFallSpeed = -7;
 var maxFlySpeed = 10;
 
 
 
-function Bird(){
+function Bird(brain){
 
     this.x = 40;
     this.y = height/2;
   
     this.isDead = false;
     this.birdSize = 30;
+    this.velocity = 0;
+    this.score = 0;
+
+    if (brain){
+        this.brain = brain;
+    }else
+    {
+        this.brain = new NeuralNetwork(5,4,2);
+    }
 
 
 
     this.show = function() {        
-            noStroke();
-            fill(240,240,50);
+            // noStroke();
+            stroke(0);
+            fill(240,240,50,70);
             ellipse(this.x,this.y,this.birdSize,this.birdSize);      
    }
 
     this.update = function(){
 
-        velocity += gravity;
-        this.y -= velocity;
+        this.velocity += gravity;
+        this.y -= this.velocity;
 
         if (this.y < 0){          
             this.y = 0;
-            velocity = 0;
+            this.velocity = 0;
 
         }
 
@@ -39,18 +48,58 @@ function Bird(){
             // velocity = maxFallSpeed;
         }
 
-        if(velocity < maxFallSpeed )
+        if(this.velocity < maxFallSpeed )
         {
-            velocity = maxFallSpeed;
+            this.velocity = maxFallSpeed;
         }
 
-        if(velocity > maxFlySpeed){
-            velocity = maxFlySpeed;
+        if(this.velocity > maxFlySpeed){
+            this.velocity = maxFlySpeed;
+        }
+    }
+
+    this.fitness = function(){
+        if(!this.isDead)
+        {
+            this.score = score;
+        }
+    }
+
+    this.guess = function(pipes){
+
+        var pipe = pipes[0];
+
+        let inputs = [];
+        inputs[0] = this.y; //bird y
+        inputs[1] = pipe.x;//pipe x
+        inputs[2] = pipe.top_opening; //pipe top opening
+        inputs[3] = pipe.bottom_opening;//pipe bottom opening
+        inputs[4] = this.velocity; //bird velocity
+        let output = this.brain.predict(inputs);
+
+        if (output[0] > output[1]){
+            this.fly();
         }
     }
 
     this.fly = function(){
-        velocity += lift;
+        this.velocity += lift;
+    }
+
+    this.gen_mutate = function(){        
+
+        function mutate(x) {
+          if (random(1) < 0.1) {
+            let offset = randomGaussian() * 0.1;
+            let newx = x + offset;
+            return newx;
+          } else {
+            return x;
+          }
+        }
+
+        
+        this.brain.mutate(mutate);
     }
 
 
