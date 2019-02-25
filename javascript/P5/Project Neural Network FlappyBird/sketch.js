@@ -1,20 +1,15 @@
 
 var birds = [];
-var bird;
 var pipes = []; 
 var counter = 0;
-var counterP;
-var generationsP;
-var pipesTotalP;
+var counterP, generationsP, pipesTotalP, reset_button,speed_slider,speed;
 var pipes_total = 0;
 var score = 0;
-var reset_button;
-var birdsDead = true
+var birdsDead = true;
 var generations = 0;
 var Top_score = 0;
 var Top_pipes_total = 0;
-var speed_slider; 
-var speed;
+var total_birds = 100;
 
 
 function setup() {
@@ -34,6 +29,8 @@ function setup() {
 
 
 function draw() {
+  frameRate(15);
+
   background(55,230,230);
   counterP.html("Current score: " + score);
   pipesTotalP.html("Current Pipes passed:" + pipes_total);
@@ -63,7 +60,7 @@ function draw() {
           birds[i].guess(pipes);
           birds[i].update(); 
           birds[i].hitPipe(pipes);
-          birds[i].fitness();
+          birds[i].setScore();
           birdsDead = false;           
          }
     }
@@ -134,15 +131,65 @@ function display_game(){
 
 function reset_game(){
 
-    birds = [];
-  for(var i = 0; i < 100; i++)
-  {    
-     birds.push( new Bird());     
-  }      
-    // bird = new Bird();
+  if (birds.length != 0)
+  // if(false)
+  {
+    newBirds = [];
+    topscoring = 0;
 
+    for (var i = 0; i < total_birds; i++){
+
+      if (topscoring < birds[i].score){
+        topscoring = birds[i].score;
+        
+      }
+    }
+    //avg_score = total_bird_score / total_birds;
+    
+    for (var i = 0; i < total_birds; i++){
+      birds[i].fitness = birds[i].score / topscoring;
+    }
+
+
+    for (var i = 0; i< total_birds; i++)
+    {
+      
+      chosen = pickOne(birds);
+      child = new Bird(chosen.brain);
+      child.tweak_NN();
+
+      newBirds.push(child);
+    }
+  
+    birds = [];
+    birds = newBirds;
+
+  }
+  else
+  {
+    birds = [];
+    for(var i = 0; i < total_birds; i++)
+    {    
+      birds.push( new Bird());     
+    }      
+      // bird = new Bird();
+  }
     score = 0;
     counter = 0;
     pipes_total=0;
     pipes = [];
+}
+
+function pickOne(list) {
+  var index = 0;
+  var r = random(1);
+
+  while (r > 0) {
+    r = r - list[index].fitness;
+    index++;
+  }
+  index--;
+
+  console.log(list[index].fitness)
+  return list[index];
 }

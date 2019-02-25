@@ -14,6 +14,7 @@ function Bird(brain){
     this.birdSize = 30;
     this.velocity = 0;
     this.score = 0;
+    this.fitness = 0;
 
     if (brain){
         this.brain = brain;
@@ -58,7 +59,7 @@ function Bird(brain){
         }
     }
 
-    this.fitness = function(){
+    this.setScore = function(){
         if(!this.isDead)
         {
             this.score = score;
@@ -86,11 +87,11 @@ function Bird(brain){
         this.velocity += lift;
     }
 
-    this.gen_mutate = function(){        
+    this.tweak_NN = function(){        
 
         function mutate(x) {
           if (random(1) < 0.1) {
-            let offset = randomGaussian() * 0.1;
+            let offset = randomGaussian(-.1, 0.1);
             let newx = x + offset;
             return newx;
           } else {
