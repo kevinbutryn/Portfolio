@@ -17,10 +17,10 @@ function Bird(brain){
     this.fitness = 0;
 
     if (brain){
-        this.brain = brain;
+        this.brain = brain.copy();
     }else
     {
-        this.brain = new NeuralNetwork(5,4,2);
+        this.brain = new NeuralNetwork(5,8,2);
     }
 
 
@@ -37,7 +37,8 @@ function Bird(brain){
         this.velocity += gravity;
         this.y -= this.velocity;
 
-        if (this.y < 0){          
+        if (this.y < 0){  
+            this.isDead = true;        
             this.y = 0;
             this.velocity = 0;
 
@@ -68,14 +69,27 @@ function Bird(brain){
 
     this.guess = function(pipes){
 
-        var pipe = pipes[0];
+        // var pipe = pipes[0];
+
+        let closest = null;
+        let closestD = Infinity;
+        for (let i = 0; i < pipes.length; i++) {
+            let d = (pipes[i].x + pipes[i].w) - this.x;
+            if (d < closestD && d > 0) {
+                closest = pipes[i];
+                closestD = d;
+            }
+        }
+        let pipe = closest;
 
         let inputs = [];
-        inputs[0] = this.y; //bird y
-        inputs[1] = pipe.x;//pipe x
-        inputs[2] = pipe.top_opening; //pipe top opening
-        inputs[3] = pipe.bottom_opening;//pipe bottom opening
+        inputs[0] = this.y / height; //bird y
+        inputs[1] = pipe.x / width;//pipe x
+        inputs[2] = pipe.top_opening / height; //pipe top opening
+        inputs[3] = pipe.bottom_opening / height;//pipe bottom opening
         inputs[4] = this.velocity; //bird velocity
+
+        console.log(inputs)
         let output = this.brain.predict(inputs);
 
         if (output[0] > output[1]){

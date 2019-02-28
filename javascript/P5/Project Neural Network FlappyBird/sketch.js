@@ -9,7 +9,7 @@ var birdsDead = true;
 var generations = 0;
 var Top_score = 0;
 var Top_pipes_total = 0;
-var total_birds = 100;
+var total_birds = 10;
 
 
 function setup() {
@@ -29,7 +29,7 @@ function setup() {
 
 
 function draw() {
-  frameRate(15);
+  // frameRate(15);
 
   background(55,230,230);
   counterP.html("Current score: " + score);
@@ -139,10 +139,10 @@ function reset_game(){
 
     for (var i = 0; i < total_birds; i++){
 
-      if (topscoring < birds[i].score){
-        topscoring = birds[i].score;
+      // if (topscoring < birds[i].score){
+        topscoring += birds[i].score;
         
-      }
+      // }
     }
     //avg_score = total_bird_score / total_birds;
     
