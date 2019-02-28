@@ -87,9 +87,9 @@ function Bird(brain){
         inputs[1] = pipe.x / width;//pipe x
         inputs[2] = pipe.top_opening / height; //pipe top opening
         inputs[3] = pipe.bottom_opening / height;//pipe bottom opening
-        inputs[4] = this.velocity; //bird velocity
+        inputs[4] = this.velocity / 10; //bird velocity
 
-        console.log(inputs)
+        // console.log(inputs)
         let output = this.brain.predict(inputs);
 
         if (output[0] > output[1]){
@@ -103,13 +103,13 @@ function Bird(brain){
 
     this.tweak_NN = function(){        
 
-        function mutate(x) {
+        function mutate(val) {
           if (random(1) < 0.1) {
-            let offset = randomGaussian(-.1, 0.1);
-            let newx = x + offset;
+            let offset = randomGaussian(0, 0.1);
+            let newx = val + offset;
             return newx;
           } else {
-            return x;
+            return val;
           }
         }
 

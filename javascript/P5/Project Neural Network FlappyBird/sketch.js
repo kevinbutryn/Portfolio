@@ -9,7 +9,8 @@ var birdsDead = true;
 var generations = 0;
 var Top_score = 0;
 var Top_pipes_total = 0;
-var total_birds = 10;
+var total_birds = 350;
+var birdsLeft;
 
 
 function setup() {
@@ -32,14 +33,14 @@ function draw() {
   // frameRate(15);
 
   background(55,230,230);
-  counterP.html("Current score: " + score);
+  counterP.html("Current score: " + score + " Birds Left: " + birdsLeft);
   pipesTotalP.html("Current Pipes passed:" + pipes_total);
   generationsP.html("Generations: " + generations);
   TopcounterP.html("Top score: " + Top_score);
   ToppipesTotalP.html("Top Pipes passed:" + Top_pipes_total);
 
   speed = speed_slider.value();
-
+  birdsLeft = 0;
 
   for (var j = 0; j < speed; j++)
   {
@@ -61,7 +62,8 @@ function draw() {
           birds[i].update(); 
           birds[i].hitPipe(pipes);
           birds[i].setScore();
-          birdsDead = false;           
+          birdsDead = false;
+          //birdsLeft++;                  
          }
     }
 
@@ -190,6 +192,6 @@ function pickOne(list) {
   }
   index--;
 
-  console.log(list[index].fitness)
+  // console.log(list[index].fitness)
   return list[index];
 }
