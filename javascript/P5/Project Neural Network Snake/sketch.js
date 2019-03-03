@@ -4,6 +4,7 @@ var snake;
 var direction;
 var score = 1;
 var reset_button;
+var brain;
 
 function setup() {
   createCanvas(400,400);
@@ -15,6 +16,8 @@ function setup() {
 
   snake = new snake();
   direction = createVector(0,1);
+
+  brain = new NeuralNetwork(24,16,4);
 }
 
 
@@ -42,6 +45,12 @@ function draw() {
     endShape();
   }
   
+
+  inputs = snake.getInputs();
+  outputs = brain.predict(inputs);
+
+  console.log(outputs);
+
   snake.update();
   snake.show();
 }

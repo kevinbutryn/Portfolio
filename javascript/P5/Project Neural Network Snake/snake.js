@@ -96,7 +96,19 @@ function snake(){
                     this.fy = floor(random(0,cols));
                 }
             }
-        }
+        }   
+    }
+
+    this.getInputs = function(){
         
+        inputs = [];
+        
+        //8 from distance to walls
+
+        //8 from distance to self
+
+        //8 from distance to food
+        
+        return inputs;
     }
 }
