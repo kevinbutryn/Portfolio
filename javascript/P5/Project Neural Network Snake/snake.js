@@ -104,11 +104,129 @@ function snake(){
         inputs = [];
         
         //8 from distance to walls
-
-        //8 from distance to self
-
-        //8 from distance to food
+        inputs = this.dWalls();
         
+        //8 from distance to self
+        inputs = concat(inputs,this.dSelf());
+        
+        //8 from distance to food
+        inputs = concat(inputs,this.dFood());
+
         return inputs;
+    }
+
+    this.dWalls = function(){
+        Winputs = [];
+
+        dtop = this.y ;
+        dbottom = rows - this.y - 1 ; 
+        dleft = this.x;
+        dright = cols - this.x - 1;
+
+        Winputs.push(dtop/scale);
+        Winputs.push(dbottom/scale);
+        Winputs.push(dleft/scale);
+        Winputs.push(dright/scale);
+
+        return Winputs;
+    }
+
+    this.dSelf = function(){
+        Sinputs = [];
+        dtop = scale;
+        dbottom = scale;
+        dleft = scale;
+        dright = scale;
+
+        for(var x = 1; x < this.length; x++){
+            xpos = this.pastMoves[x].x;
+            ypos = this.pastMoves[x].y;
+            if (this.x == xpos){
+                ydis = this.y - ypos;
+                if (ydis > 0){
+                    if (dtop > ydis)
+                    {
+                        dtop = ydis;
+                    }
+                }else{
+                    if (dbottom > ydis * -1)
+                    {
+                        dbottom = ydis * -1;
+                    }
+                }
+
+            }
+            if (this.y == ypos){
+                xdis = this.x - xpos;
+                if (xdis > 0){
+                    if (dleft > xdis)
+                    {
+                        dleft = xdis;
+                    }
+                }else{
+                    if (dright > xdis * -1)
+                    {
+                        dright = xdis * -1;
+                    }
+                }
+            }
+        }
+        
+
+        Sinputs.push(dtop/scale);
+        Sinputs.push(dbottom/scale);
+        Sinputs.push(dleft/scale);
+        Sinputs.push(dright/scale);
+
+        return Sinputs;
+    }
+
+    this.dFood = function(){
+        Finputs = [];
+
+        dtop = scale;
+        dbottom = scale;
+        dleft = scale;
+        dright = scale;
+
+        if (this.x == this.fx){
+            ydis = this.y - this.fy;
+            
+            if (ydis > 0){
+                if (dtop > ydis)
+                {
+                    dtop = ydis;
+                }
+            }else{
+                if (dbottom > ydis * -1)
+                {
+                    dbottom = ydis * -1;
+                }
+            }
+
+        }
+        if (this.y == this.fy){
+            xdis = this.x - this.fx;
+            
+            if (xdis > 0){
+                if (dleft > xdis)
+                {
+                    dleft = xdis;
+                }
+            }else{
+                if (dright > xdis * -1)
+                {
+                    dright = xdis * -1;
+                }
+            }
+        }
+
+
+        Finputs.push(dtop/scale);
+        Finputs.push(dbottom/scale);
+        Finputs.push(dleft/scale);
+        Finputs.push(dright/scale);
+            
+        return Finputs;
     }
 }

@@ -5,6 +5,7 @@ var direction;
 var score = 1;
 var reset_button;
 var brain;
+var takeOver = false;
 
 function setup() {
   createCanvas(400,400);
@@ -17,7 +18,8 @@ function setup() {
   snake = new snake();
   direction = createVector(0,1);
 
-  brain = new NeuralNetwork(24,16,4);
+  // brain = new NeuralNetwork(24,16,4);
+  brain = new NeuralNetwork(12,9,4);
 }
 
 
@@ -47,9 +49,42 @@ function draw() {
   
 
   inputs = snake.getInputs();
-  outputs = brain.predict(inputs);
+  // console.log(inputs);
 
+  outputs = brain.predict(inputs);
   console.log(outputs);
+
+  index = -1;
+  maxVal = -1;
+
+  for(var x = 0; x < outputs.length; x++){
+    if (maxVal < outputs[x])
+    {
+      maxVal = outputs[x];
+      index = x;
+    }
+  }
+
+  if (takeOver){
+    if (index == 0){
+      dir = "up";
+      direction = createVector(0,-1);
+    }else if (index == 1){
+      dir = "down";
+      direction = createVector(0,1);
+    }else if (index == 2){
+      dir = "left";
+      direction = createVector(-1,0);
+    }else if (index ==3){
+      dir = "right";
+      direction = createVector(1,0);
+    }
+
+    snake.setDirection(direction);
+  }
+  else {
+    trainBrain(inputs);
+  }
 
   snake.update();
   snake.show();
@@ -64,7 +99,10 @@ function keyPressed() {
 	}else if (keyCode === UP_ARROW){
 		direction = createVector(0,-1);
 	}else if (keyCode === DOWN_ARROW){
-		direction = createVector(0,1);
+    direction = createVector(0,1);
+  }else if (key == ' '){
+    takeOver = true;
+    console.log("AI TAKING OVER");
   }
   
   snake.setDirection(direction);
@@ -83,5 +121,21 @@ function gameOver() {
 
 function resetGame(){
   snake.reset();
+  takeOver = false;
   loop();
+}
+
+function trainBrain(input){
+  
+  if (direction.y == -1){ //top
+    targets = [1,0,0,0];
+  }else if (direction.y == 1){ //down
+    targets = [0,1,0,0];
+  }else if (direction.x == -1){ //left
+    targets = [0,0,1,0];
+  }else if (direction.x == 1){ //right
+    targets = [0,0,0,1];
+  }
+
+  brain.train(input,targets);
 }
