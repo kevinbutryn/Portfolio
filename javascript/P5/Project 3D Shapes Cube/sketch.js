@@ -1,7 +1,7 @@
 let angle = 0;
 
 function setup() {
-  createCanvas(400,400,WEBGL);
+  createCanvas(600,600,WEBGL);
   
 }
 
@@ -9,53 +9,60 @@ function setup() {
 function draw() {
 
     background(0);
-    //translate (0, height / 2);
     rectMode(CENTER);
 
-    let h = 100;
-    let w = 10;
-    let default_h = 50;
-    let spacing = 2;
+    let w = 40;
+    let spacing = 10;
 
-    let cols = 10;
-    let rows = 10;
+    let cols = 3;
+    let rows = 3;
+    let layers = 3;
 
-    let middle_row = ((w + spacing) * rows) / 2;
-    let middle_col = ((w + spacing) * cols) / 2;
+    let middle = w * 1 + spacing ; // because boxes are drawn centering around point
 
-    translate ( -middle_row , -middle_col,0 )
 
-    rotateY(angle * .25);
-    rotateX(-QUARTER_PI);
-    
-    //translate ( middle_row , middle_col,0 )
+    // (-left/+right) (-up/+down) (-backward/+forward)
+    translate(-middle,-middle,0)
 
-    let offset = 0;
-    for (let y = 0; y < (w + spacing ) * rows; y += w + spacing)
+    ////////////// rotate whole cube 
+
+    // rotate left+ right- 
+    //rotateY(angle * .25)
+
+    // roll forward+ backward-
+    //rotateX(angle * .25)
+
+    // roll right+ left-
+    //rotateZ(angle * .25)
+
+    //////////////
+
+    //rotateY(angle * .25);
+    //rotateX(-QUARTER_PI);
+    //rotateY(HALF_PI * .8)
+
+    for (let z = 0; z < (w+ spacing) * layers; z += w + spacing)
     {
-      for (let x = 0; x < (w + spacing) * cols; x += w + spacing)
+      rotateY(angle * .25)
+      
+      for (let y = 0; y < (w + spacing ) * rows; y += w + spacing)
       {
-        push();
-        translate (x, 0, y);
+        for (let x = 0; x < (w + spacing) * cols; x += w + spacing)
+        {
+          push();
+          translate (x, z, y);
+          
+          // rotate individule cube 
+          //rotateY(angle);
 
-        a = angle + offset;
-        zval = sin(a);
+          box(w, w, w);
 
-        z = map (zval, -1, 1 , 1 , h)
-
-        //rect (x + w/2, 0, w, y);
-        box(w, z + default_h, w)
-
-        offset += 0.15;
-
-        pop();
+          pop();
+          
+        }
       }
     }
 
-  
-    
-
-    console.log(middle_col)
     angle += .01;
 }
 
