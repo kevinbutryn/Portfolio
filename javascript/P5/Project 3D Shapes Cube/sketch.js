@@ -43,10 +43,14 @@ function draw() {
 
     for (let z = 0; z < (w+ spacing) * layers; z += w + spacing)
     {
-      rotateY(angle * .25)
+      
+      //translate(-middle,-middle,0)
+      //rotateY(angle * .25)
+      //translate(0,0,z)
       
       for (let y = 0; y < (w + spacing ) * rows; y += w + spacing)
       {
+
         for (let x = 0; x < (w + spacing) * cols; x += w + spacing)
         {
           push();
