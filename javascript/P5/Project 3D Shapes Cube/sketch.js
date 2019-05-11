@@ -26,14 +26,14 @@ function draw() {
 
     ////////////// rotate whole cube 
 
-    // rotate left+ right- 
-    //rotateY(angle * .25)
-
     // roll forward+ backward-
-    //rotateX(angle * .25)
+    rotateX(angle * .25)
+
+    // rotate left+ right- 
+    rotateY(angle * .25)
 
     // roll right+ left-
-    //rotateZ(angle * .25)
+    rotateZ(angle * .25)
 
     //////////////
 
