@@ -1,23 +1,17 @@
 class Ray{
   
     constructor(pos, angle){
-        this.pos = pos; //createVector(x,y);
+        this.pos = pos;
         this.dir = p5.Vector.fromAngle(angle);
         this.pt = null;
         this.d = Infinity;
     }
 
-    lookAt(x, y){
-        this.dir.x = x - this.pos.x;
-        this.dir.y = y - this.pos.y;
-        this.dir.normalize();
-    }
-
     show(){
-        //stroke(255,100);
-
+        //default color green
         stroke(0,255,0,100);
 
+        // color code rays based on distance
         if(this.d < 400)
         {
             stroke(170,255,0,100); 
@@ -35,6 +29,7 @@ class Ray{
             stroke(255,0,0,100);
         }
 
+        // draw ray to point or infinity(600)
         if (this.pt){
             line(this.pos.x,this.pos.y, this.pt.x, this.pt.y);
         }else{
@@ -42,10 +37,11 @@ class Ray{
         }
     }
 
+    // finds closest point of intersection of all boundaries
     update(walls){
         this.pt = null;
-        let best_pt = null;
         this.d = Infinity;
+        let best_pt = null;
         let best_d = Infinity;
 
         for(let wall of walls){
@@ -67,6 +63,7 @@ class Ray{
         this.d = best_d;
     }
 
+    // find point of intersection of ray to boundaries
     cast(wall){
         const x1 = wall.a.x;
         const y1 = wall.a.y;
@@ -95,7 +92,6 @@ class Ray{
         if (t <= 0 || t >= 1){
             return false;
         }
-
 
         const pt = createVector();
         pt.x = x1 + t * (x2 - x1);
