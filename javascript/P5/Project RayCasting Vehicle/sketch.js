@@ -2,8 +2,10 @@ let walls = [];
 let vehicle;
 let xoff = 0;
 let yoff = 10000;
-
+let dir = '';
 let start,end;
+
+
 function setup() {
 
   createCanvas(600,600);
@@ -17,27 +19,27 @@ function setup() {
 function draw() {
     background(0);
     
-    // draw boundaries
-    for (let wall of walls){
-      wall.show();
-    }
+    //Check Input
+    checkInput()
 
-    // draw start and end
-    ellipse(start.x,start.y,10)
-    ellipse(end.x,end.y,10)
-
-
-    if(vehicle.alive){
+    // if(vehicle.alive){
       // update particle and rays
       vehicle.update(walls);
-    }
+    // }
 
-    //show particle
-    vehicle.show();
-
-    //show particle rays
+    //draw the world, boundaries, vehicles
+    drawWorld()
+    
+    //show particle rays and DEBUG
     vehicle.showRays();
+
+
   }
+
+
+
+
+
 
   function createBoundaries(){
     for (let i = 0; i < 2; i++){
@@ -72,3 +74,38 @@ function draw() {
     walls.push(new Boundary(0, height, 0, 0));
   }
 
+  function checkInput() {
+  
+    if (keyIsDown(LEFT_ARROW)) {
+      dir = 'LEFT'
+    }
+  
+    if (keyIsDown(RIGHT_ARROW)) {
+      dir = 'RIGHT'
+    }
+  
+    if (keyIsDown(UP_ARROW)) {
+      dir = 'FORWARD'	
+    }
+  
+    if (keyIsDown(DOWN_ARROW)) {
+      dir = 'BACKWARD'	
+    }
+  }
+  function keyReleased(){
+    dir = 'DRAG'
+  }
+
+  function drawWorld(){
+      // draw boundaries
+      for (let wall of walls){
+        wall.show();
+      }
+  
+      // draw start and end
+      ellipse(start.x,start.y,10)
+      ellipse(end.x,end.y,10)
+
+    //show particle
+    vehicle.show();
+  }
