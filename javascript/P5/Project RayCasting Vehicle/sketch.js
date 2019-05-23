@@ -1,26 +1,40 @@
 let walls = [];
 let vehicle;
-let xoff = 0;
-let yoff = 10000;
 let dir = '';
 let start,end;
+let brain;
+let SIGHT = 300
 
 
 function setup() {
 
+
+  tf.setBackend('cpu');
   createCanvas(600,600);
   createBoundaries();
 
   vehicle = new Vehicle();
- 
+  brain = new NeuralNetwork(5,8,4);
 }
 
 
 function draw() {
     background(0);
     
+    let inputs = [];
+   
+    for(let i = 0; i < vehicle.rays.length ; i++){
+      let distance = vehicle.rays[i].d
+      let input = map(distance,0,SIGHT,1,0)
+      inputs.push(input)
+    }
+    
+    let output = brain.predict(inputs);
+
+    let direction = output.indexOf(Math.max(...output))
+
     //Check Input
-    checkInput()
+    checkInput(direction)
 
     // if(vehicle.alive){
       // update particle and rays
@@ -36,11 +50,6 @@ function draw() {
 
   }
 
-
-
-
-
-
   function createBoundaries(){
     for (let i = 0; i < 2; i++){
       // // random points
@@ -54,18 +63,18 @@ function draw() {
     }
   
     //racetrack
-    walls.push(new Boundary(100, 500, 100, 250));
-    walls.push(new Boundary(200, 500, 200, 250));
+    walls.push(new Boundary(100, height, 100, 250));
+    walls.push(new Boundary(200, height, 200, 300));
   
     walls.push(new Boundary(100, 250, 250, 100));
-    walls.push(new Boundary(200, 250, 250, 200));
+    walls.push(new Boundary(200, 300, 300, 200));
   
-    walls.push(new Boundary(250, 100, 450, 100));
-    walls.push(new Boundary(250, 200, 450, 200));
+    walls.push(new Boundary(250, 100, width, 100));
+    walls.push(new Boundary(300, 200, width, 200));
   
     // end and start
-    start = createVector(150,500);
-    end = createVector(450,150);
+    start = createVector(150,550);
+    end = createVector(550,150);
     
     //add edges
     walls.push(new Boundary(0, 0, width, 0));
@@ -74,24 +83,37 @@ function draw() {
     walls.push(new Boundary(0, height, 0, 0));
   }
 
-  function checkInput() {
+  function checkInput(input) {
   
-    if (keyIsDown(LEFT_ARROW)) {
+    if (input === 0){
       dir = 'LEFT'
     }
-  
-    if (keyIsDown(RIGHT_ARROW)) {
+    if (input === 1){
       dir = 'RIGHT'
     }
-  
-    if (keyIsDown(UP_ARROW)) {
-      dir = 'FORWARD'	
+    if (input === 2){
+      dir = 'FORWARD'
     }
-  
-    if (keyIsDown(DOWN_ARROW)) {
-      dir = 'BACKWARD'	
+    if (input === 3){
+      dir = 'BACKWARD'
     }
+    // if (keyIsDown(LEFT_ARROW)) {
+    //   dir = 'LEFT'
+    // }
+  
+    // if (keyIsDown(RIGHT_ARROW)) {
+    //   dir = 'RIGHT'
+    // }
+  
+    // if (keyIsDown(UP_ARROW)) {
+    //   dir = 'FORWARD'	
+    // }
+  
+    // if (keyIsDown(DOWN_ARROW)) {
+    //   dir = 'BACKWARD'	
+    // }
   }
+
   function keyReleased(){
     dir = 'DRAG'
   }

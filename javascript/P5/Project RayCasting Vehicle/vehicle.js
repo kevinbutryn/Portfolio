@@ -1,34 +1,26 @@
-const start_posx = 300;
-const start_posy = 300;
-const incr = 45;
-
 class Vehicle{
 
   constructor() {
-    this.pos = createVector(start_posx,start_posy);
-    this.vel = createVector(0,.5);	
+    this.pos = createVector(start.x,start.y);
+    this.vel = createVector(0,-.5);	
     this.acc = createVector(0,0);
     this.w = 20;
     this.maxSpeed = 3;
     this.rays = [];
     this.alive = true;
-    this.maxspeed = 2;
+    this.maxspeed = 3;
     this.maxforce = .5; 
+    this.STEERINGFORCE = .1;
+    this.BREAKFORCE = .9
     this.createRays();
+    this.updateRays(walls);
   }
 
   applyForce(force){
 
     if(force.equals(createVector(0,0)))
     {
-      if (!this.vel.equals(createVector(0,0))){
-        if(this.vel.mag() < .1)
-        {
-          this.vel.mult(0);
-          return
-        }
-        this.vel = this.vel.mult(.95);      
-      }
+        this.vel = this.vel.mult(.97);      
     }
     
     // add force
@@ -45,8 +37,11 @@ class Vehicle{
 
   createRays(){
     this.rays = [];
-    for (let a = 0; a < 360; a += incr){
-      this.rays.push(new Ray(this.pos, radians(a)));
+    let head = this.vel.heading()
+    for (let a = PI/2; a >= -PI/2; a -= PI/4){
+      let ray = new Ray(this.pos, a + head)
+      
+      this.rays.push(ray);
     }
   }
 
@@ -69,7 +64,7 @@ class Vehicle{
       translate (this.pos.x, this.pos.y)
       rotate(this.vel.heading());
       rectMode(CENTER);
-      rect(0, 0, 20,4);
+      rect(0, 0, 15,4);
     pop();
   }
 
@@ -77,28 +72,28 @@ class Vehicle{
     //set default drag
     let force = createVector(0,0);
 
-    let tempv = this.vel.copy();
-    let heading = tempv.heading();
+    let heading = this.vel.heading();
     let temp = p5.Vector.fromAngle(heading);
-    console.log(temp)
+    let steer = map(this.vel.mag(), 0, this.maxspeed, 0 , this.STEERINGFORCE )
+
     
     //set force based on DIR set
     if (dir === 'FORWARD'){
-      //force.add( createVector(0,-1));
-      force.add(temp);
+      force= ( createVector(temp.x,temp.y))
     }
     if (dir === 'BACKWARD'){
-      // force.add(createVector(0,1));
-      force.add(temp.mult(-1));
+      this.vel.mult(this.BREAKFORCE)
     }
     if (dir === 'RIGHT'){
-      force.add( createVector(.1,0));
+      temp.mult(steer)
+      temp.rotate(PI/2)
+      force = ( createVector(temp.x,temp.y));
     }
      if (dir === 'LEFT'){
-      force.add( createVector(-.1,0));	
+      temp.mult(steer)
+      temp.rotate(-PI/2)
+      force = ( createVector(temp.x,temp.y));
     }
-
- 
 
     //Apply the force in the direction
     this.applyForce(force);
@@ -108,7 +103,6 @@ class Vehicle{
   }
 
   seek(target) {
-
     var desired = p5.Vector.sub(target, this.position); // A vector pointing from the location to the target
 
     // Scale to maximum speed
@@ -119,11 +113,9 @@ class Vehicle{
     steer.limit(this.maxforce); // Limit to maximum steering force
 
     return steer;
-    //this.applyForce(steer);
   }
 
   update(walls){
-
     //move vehicle
     this.move();
 

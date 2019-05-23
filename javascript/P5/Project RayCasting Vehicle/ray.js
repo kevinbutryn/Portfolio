@@ -4,7 +4,8 @@ class Ray{
         this.pos = pos;
         this.dir = p5.Vector.fromAngle(angle);
         this.pt = null;
-        this.d = Infinity;
+        this.sight = SIGHT;
+        this.d = this.sight;
     }
 
     show(){
@@ -40,13 +41,13 @@ class Ray{
     // finds closest point of intersection of all boundaries
     update(walls){
         this.pt = null;
-        this.d = Infinity;
+        this.d = this.sight;
         let best_pt = null;
-        let best_d = Infinity;
+        let best_d = this.sight;
 
         for(let wall of walls){
             let temp_pt = null;
-            let temp_d = Infinity;
+            let temp_d = this.sight;
 
             temp_pt = this.cast(wall);
 
