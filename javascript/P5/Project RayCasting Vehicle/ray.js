@@ -39,17 +39,17 @@ class Ray{
     }
 
     // finds closest point of intersection of all boundaries
-    update(walls){
+    update(targets){
         this.pt = null;
         this.d = this.sight;
         let best_pt = null;
         let best_d = this.sight;
 
-        for(let wall of walls){
+        for(let i = 0; i < targets.length; i ++){
             let temp_pt = null;
             let temp_d = this.sight;
 
-            temp_pt = this.cast(wall);
+            temp_pt = this.cast(targets[i]);
 
             if (temp_pt)
             {

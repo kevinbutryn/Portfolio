@@ -1,8 +1,10 @@
+
 function nextGeneration() {
     console.log('next generation');
-    calculateFitness();
-    let temp = [];
-    for (let i = 0; i < POPSIZE; i++) {
+    
+    let temp = calculateFitness();
+    
+    for (let i = temp.length; i < POPSIZE; i++) {
       temp[i] = pickOne();
     }
 
@@ -29,11 +31,41 @@ function nextGeneration() {
   
   function calculateFitness() {
     let sum = 0;
+    let topFit = 0;
+    let best = [];
     for (let v of vehicle) {
-      v.calcFit();
-      sum += v.fitness;
+      // v.calcFit();
+      v.score *= 100;
+      let score = v.score 
+      sum += score ;
+
+      if (score > topFit)
+      {
+        topFit = score;
+        best = []
+        best.push(new Vehicle(v.brain))
+        console.log("-----")
+        console.log(v.score)
+      }
+      if (score == topFit)
+      {
+        best.push(new Vehicle(v.brain))
+
+      }
     }
+
     for (let v of vehicle) {
-      v.fitness = v.fitness / sum;
+      v.fitness = v.score / sum;
+      // console.log("-----")
+      // console.log(v.score)
+      // console.log(v.fitness)
+    }
+    if (best.length > bestNum)
+    {
+      return best.splice(0,bestNum)
+    }
+    else
+    {
+      return best
     }
   }

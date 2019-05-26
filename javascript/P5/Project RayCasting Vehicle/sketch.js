@@ -1,32 +1,36 @@
 let walls = [];
+let gates = [];
 let vehicle = [];
 let dir = '';
 let start,end;
 let brain;
 let SIGHT = 300;
 let POPSIZE = 100;
-let time = 0;
-let LIFELIMIT = 300;
 let mr = .1
+let center;
+let points = [];
+let Twidth = 40;
+let bestNum = 5;
+
 
 
 function setup() {
 
 
   tf.setBackend('cpu');
-  createCanvas(600,600);
+  createCanvas(800,800);
   createBoundaries();
 
   for(let j = 0; j < POPSIZE; j++){
     vehicle.push(new Vehicle())
   }
+  center = createVector(width/ 2, height/2 );
 }
 
 
 function draw() {
     background(0);
     let alive = false;
-    time+=1;
     for(let j = 0; j < POPSIZE; j++){
       if(vehicle[j].alive){
         alive = true;
@@ -38,16 +42,24 @@ function draw() {
       }
     }
 
-    if (!alive || (time == LIFELIMIT))
+    if (!alive )
     {
-      time = 0;
       nextGeneration();
     }
 
     //draw the world, boundaries, vehicles
-    drawWorld();
+    drawWorld(); 
+
+    //draw map logic
+    // drawMakeMap();
     
   }
+
+  //get map logic
+  // function mousePressed() {
+  //   let p = createVector(mouseX, mouseY)    
+  //   points.push(p)
+  // }
 
   function checkInput(input) {
   
@@ -85,14 +97,18 @@ function draw() {
   }
 
   function drawWorld(){
-      // draw boundaries
-      for (let wall of walls){
-        wall.show();
-      }
-  
-      // draw start and end
-      ellipse(start.x,start.y,10)
-      ellipse(end.x,end.y,10)
+    // draw boundaries
+    for (let wall of walls){
+      wall.show();
+    }
+
+    for (let gate of gates){
+      gate.show();
+    }
+
+    // draw start and end
+    ellipse(start.x,start.y,10)
+    ellipse(end.x,end.y,10)
 
     //show particle
     for(let j = 0; j < POPSIZE; j++){
@@ -101,9 +117,53 @@ function draw() {
   }
 
   function createBoundaries(){
-    
-    
-    
+   
+    let outer = [ 
+      createVector(42, 269),
+      createVector(38, 167),
+      createVector(91, 70),
+      createVector(191, 51),
+      createVector(279, 150),
+      createVector(303, 159),
+      createVector(329, 148),
+      createVector(545, 43),
+      createVector(671, 24),
+      createVector(766, 66),
+      createVector(788, 204),
+      createVector(787, 525),
+      createVector(532, 411),
+      createVector(499, 412),
+      createVector(470, 435),
+      createVector(468, 477),
+      createVector(527, 554),
+      createVector(718, 781),
+      createVector(355, 788),
+      createVector(121, 787),
+      createVector(22, 643)
+      ]
+    let inner = [
+      createVector(148, 271),
+      createVector(143, 187),
+      createVector(156, 171),
+      createVector(170, 171),
+      createVector(206, 240),
+      createVector(290, 286),
+      createVector(396, 245),
+      createVector(589, 141),
+      createVector(638, 147),
+      createVector(645, 158),
+      createVector(655, 206),
+      createVector(700, 376),
+      createVector(583, 324),
+      createVector(467, 315),
+      createVector(353, 396),
+      createVector(345, 532),
+      createVector(422, 635),
+      createVector(505, 703),
+      createVector(343, 705),
+      createVector(177, 700),
+      createVector(142, 637)
+    ]
     //Random boundaries
     // for (let i = 0; i < 2; i++){
       // // random points
@@ -116,19 +176,35 @@ function draw() {
       // walls.push (new Boundary(x1,y1,x2,y2));
     // }
   
-    //racetrack
-    // walls.push(new Boundary(100, height, 100, 250));
-    // walls.push(new Boundary(200, height, 200, 300));
-  
-    // walls.push(new Boundary(100, 250, 250, 100));
-    // walls.push(new Boundary(200, 300, 300, 200));
-  
-    // walls.push(new Boundary(250, 100, width, 100));
-    // walls.push(new Boundary(300, 200, width, 200));
-    
+    for(let b1 = 0; b1 < outer.length; b1 ++)
+    {
+      let b2 = b1 + 1
+      if (b2 == outer.length)
+      {
+        b2 = 0
+      }
+
+      let start = outer[b1]
+      let end = outer[b2]
+      walls.push(new Boundary(start.x, start.y, end.x, end.y));
+      ellipse(start.x,start.y,10)
+
+      let start1 = inner[b1]
+      let end1 = inner[b2]
+      walls.push(new Boundary(start1.x, start1.y, end1.x, end1.y));
+
+
+      gates.push(new Boundary(end.x, end.y, end1.x, end1.y));
+
+    }
+    gates.splice(gates.length-1,1)
+
+    // create starting boundary
+      walls.push(new Boundary(inner[0].x, inner[0].y, outer[0].x, outer[0].y));
+
     // end and start
-    start = createVector(150,550);
-    end = createVector(550,150);
+    start = createVector(95,250);
+    end = createVector(95,350);
     
     //add edges
     walls.push(new Boundary(0, 0, width, 0));
@@ -137,3 +213,40 @@ function draw() {
     walls.push(new Boundary(0, height, 0, 0));
   }
 
+
+  function drawMakeMap(){
+    for( let p in points){
+      ellipse(points[p].x,points[p].y,5)       
+      console.log(" createVector(" + points[p].x + ", "+ points[p].y + "),")
+    }
+    console.log("------")
+  }
+
+
+
+
+//// Garbage 
+
+// for( let p in points){
+//   // line(points[p].x,points[p].y,center.x,center.y)
+//   angle = atan2(points[p].y - height / 2, points[p].x - width / 2)
+//   d = dist(points[p].x , points[p].y , width / 2, height / 2)
+
+//   let v = p5.Vector.fromAngle(angle);
+
+//   ellipse(center.x + v.x*d,center.y + v.y*d,10)
+//   ellipse(center.x + v.x*(d + Twidth),center.y + v.y*(d + Twidth),10)
+
+// }
+
+
+// for(let a = 0; a< 360; a+= 360/30)
+// {
+//   let x = cos(radians(a));
+//   let y = sin(radians(a));
+//   // console.log(x)
+//   // console.log(y)
+//   // let l = p5.Vector.fromAngle(a);
+//   line(center.x,center.y, center.y + x * 150,center.y + y * 150)
+
+// }

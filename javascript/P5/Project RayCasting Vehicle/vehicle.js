@@ -13,6 +13,8 @@ class Vehicle{
     this.STEERINGFORCE = .1;
     this.BREAKFORCE = .9;
     this.fitness = 0;
+    this.score = 0;
+    this.life = 150;
     if (brain){
       this.brain = brain.copy();
     }
@@ -136,19 +138,38 @@ class Vehicle{
 
     //update rays of particle 
     this.updateRays(walls);
+
+    //reduce life
+    this.checkLife();
   }
   
+  checkLife(){
+    this.life --
+    if (this.life == 0){
+      this.alive = false;
+    }
+  }
   updateRays(walls){
     //create new rays at location
     this.createRays();
     
     let d = dist(this.pos.x, this.pos.y, end.x, end.y)
-    if(d < 8){
+    if(d < 4){
       this.alive = false;
     }
 
     //update rays logic
     for (let ray of this.rays){
+      ray.update([gates[this.score]]);
+      
+      //check if crashed
+      if (ray.pt){
+        if (ray.d < this.w / 2){
+          this.score++
+          this.life += 50
+        }
+      } 
+      
       ray.update(walls);
       
       //check if crashed
@@ -163,7 +184,7 @@ class Vehicle{
   checkInput(input) {
   
     if (input === 0){
-      this.rotatedir = 'LEFT'
+      this.dir = 'LEFT'
     }
     if (input === 1){
       this.dir = 'RIGHT'
@@ -186,7 +207,6 @@ class Vehicle{
     }
     
     let output = this.brain.predict(inputs);
-
     return output.indexOf(Math.max(...output))
   }
 
