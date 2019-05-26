@@ -1,6 +1,6 @@
 class Vehicle{
 
-  constructor() {
+  constructor(brain) {
     this.pos = createVector(start.x,start.y);
     this.vel = createVector(0,-.5);	
     this.acc = createVector(0,0);
@@ -11,7 +11,15 @@ class Vehicle{
     this.maxspeed = 3;
     this.maxforce = .5; 
     this.STEERINGFORCE = .1;
-    this.BREAKFORCE = .9
+    this.BREAKFORCE = .9;
+    this.fitness = 0;
+    if (brain){
+      this.brain = brain.copy();
+    }
+    else
+    {
+      this.brain = new NeuralNetwork(5,8,4);
+    }
     this.createRays();
     this.updateRays(walls);
   }
@@ -54,7 +62,7 @@ class Vehicle{
   show(){
     // change color if dead
     if (this.alive){
-      fill(255);
+      fill(255,100);
     } else{
       fill(255,0,0);
     }
@@ -78,18 +86,18 @@ class Vehicle{
 
     
     //set force based on DIR set
-    if (dir === 'FORWARD'){
+    if (this.dir === 'FORWARD'){
       force= ( createVector(temp.x,temp.y))
     }
-    if (dir === 'BACKWARD'){
+    if (this.dir === 'BACKWARD'){
       this.vel.mult(this.BREAKFORCE)
     }
-    if (dir === 'RIGHT'){
+    if (this.dir === 'RIGHT'){
       temp.mult(steer)
       temp.rotate(PI/2)
       force = ( createVector(temp.x,temp.y));
     }
-     if (dir === 'LEFT'){
+     if (this.dir === 'LEFT'){
       temp.mult(steer)
       temp.rotate(-PI/2)
       force = ( createVector(temp.x,temp.y));
@@ -99,7 +107,7 @@ class Vehicle{
     this.applyForce(force);
 
     //Set default to forward
-    dir = ''	
+    this.dir = ''	
   }
 
   seek(target) {
@@ -116,6 +124,13 @@ class Vehicle{
   }
 
   update(walls){
+
+    //NN think of direction
+    let direction = this.think()
+
+    //Check Input
+    this.checkInput(direction)
+
     //move vehicle
     this.move();
 
@@ -127,11 +142,15 @@ class Vehicle{
     //create new rays at location
     this.createRays();
     
+    let d = dist(this.pos.x, this.pos.y, end.x, end.y)
+    if(d < 8){
+      this.alive = false;
+    }
+
     //update rays logic
     for (let ray of this.rays){
       ray.update(walls);
       
-
       //check if crashed
       if (ray.pt){
         if (ray.d < this.w / 2){
@@ -140,6 +159,44 @@ class Vehicle{
       } 
     }
   }
+
+  checkInput(input) {
+  
+    if (input === 0){
+      this.rotatedir = 'LEFT'
+    }
+    if (input === 1){
+      this.dir = 'RIGHT'
+    }
+    if (input === 2){
+      this.dir = 'FORWARD'
+    }
+    if (input === 3){
+      this.dir = 'BACKWARD'
+    }
+  }
+
+  think(){
+    let inputs = [];
+   
+    for(let i = 0; i < this.rays.length ; i++){
+      let distance = this.rays[i].d
+      let input = map(distance,0,SIGHT,1,0)
+      inputs.push(input)
+    }
+    
+    let output = this.brain.predict(inputs);
+
+    return output.indexOf(Math.max(...output))
+  }
+
+  calcFit(){
+
+    let d = dist(this.pos.x,this.pos.y, start.x,start.y)
+    this.fitness = d;
+  }
+
+
 }
 
 

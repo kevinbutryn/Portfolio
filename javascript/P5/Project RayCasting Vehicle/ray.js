@@ -13,19 +13,19 @@ class Ray{
         stroke(0,255,0,100);
 
         // color code rays based on distance
-        if(this.d < 400)
+        if(this.d < 250)
         {
             stroke(170,255,0,100); 
         }
-        if(this.d < 300)
+        if(this.d < 175)
         {
             stroke(240,140,70,100);
         }
-        if(this.d < 200)
+        if(this.d < 125)
         {
             stroke(255,100,0,100);
         }
-        if(this.d < 100)
+        if(this.d < 75)
         {
             stroke(255,0,0,100);
         }
