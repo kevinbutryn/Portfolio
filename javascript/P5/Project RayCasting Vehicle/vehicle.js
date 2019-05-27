@@ -20,7 +20,7 @@ class Vehicle{
     }
     else
     {
-      this.brain = new NeuralNetwork(5,8,4);
+      this.brain = new NeuralNetwork(6,8,4);
     }
     this.createRays();
     this.updateRays(walls);
@@ -160,7 +160,17 @@ class Vehicle{
 
     //update rays logic
     for (let ray of this.rays){
-      ray.update([gates[this.score]]);
+
+      let inc = this.score % gates.length
+      // console.log(inc)
+      // console.log(gates.length)
+      if(this.score > 19)
+      {
+        console.log(inc)
+        console.log("---")
+      }
+
+      ray.update([gates[inc]]);
       
       //check if crashed
       if (ray.pt){
@@ -205,6 +215,8 @@ class Vehicle{
       let input = map(distance,0,SIGHT,1,0)
       inputs.push(input)
     }
+
+    inputs.push(this.vel.mag())
     
     let output = this.brain.predict(inputs);
     return output.indexOf(Math.max(...output))

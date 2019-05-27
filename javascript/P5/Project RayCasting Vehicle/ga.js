@@ -2,8 +2,12 @@
 function nextGeneration() {
     console.log('next generation');
     
-    let temp = calculateFitness();
-    
+    let best = calculateFitness();
+    let temp = []
+    for (let i = 0; i < best.length-1; i++) {
+      temp[i] = new Vehicle (best[i].brain);
+    }
+
     for (let i = temp.length; i < POPSIZE; i++) {
       temp[i] = pickOne();
     }
@@ -11,6 +15,7 @@ function nextGeneration() {
     for (let i = 0; i < POPSIZE; i++) {
       vehicle[i].brain.dispose();
     }
+
     vehicle = temp;
     
   }
@@ -43,29 +48,33 @@ function nextGeneration() {
       {
         topFit = score;
         best = []
-        best.push(new Vehicle(v.brain))
-        console.log("-----")
-        console.log(v.score)
+        // best.push(new Vehicle(v.brain))
+        best.push(v)
+        // console.log("-----")
+        // console.log(v.score)
       }
-      if (score == topFit)
+      if (score == topFit && bestNum > best.length)
       {
-        best.push(new Vehicle(v.brain))
-
+        // best.push(new Vehicle(v.brain))
+        // console.log (best)
+        best.push(v)
       }
+
     }
 
+    // console.log (topFit)
+
     for (let v of vehicle) {
-      v.fitness = v.score / sum;
+      // v.fitness = v.score / sum;
+      v.fitness = v.score / topFit;
+
       // console.log("-----")
       // console.log(v.score)
       // console.log(v.fitness)
     }
-    if (best.length > bestNum)
-    {
-      return best.splice(0,bestNum)
-    }
-    else
-    {
-      return best
-    }
+
+    //TODO MEMORY LEAK?
+    // console.log(best.length)
+    // console.log(tf.memory())
+    return best
   }

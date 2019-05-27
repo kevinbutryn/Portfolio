@@ -25,26 +25,31 @@ function setup() {
     vehicle.push(new Vehicle())
   }
   center = createVector(width/ 2, height/2 );
+  sliderLength = createSlider(1, 100, 1, 5)
 }
 
 
 function draw() {
     background(0);
-    let alive = false;
-    for(let j = 0; j < POPSIZE; j++){
-      if(vehicle[j].alive){
-        alive = true;
-        // update particle and rays
-        vehicle[j].update(walls);
-
-        //show particle rays and DEBUG
-        //vehicle[j].showRays();
-      }
-    }
-
-    if (!alive )
+    let speed = sliderLength.value();
+    for(let i = 0; i < speed; i++)
     {
-      nextGeneration();
+      let alive = false;
+      for(let j = 0; j < POPSIZE; j++){
+        if(vehicle[j].alive){
+          alive = true;
+          // update particle and rays
+          vehicle[j].update(walls);
+
+          //show particle rays and DEBUG
+          //vehicle[j].showRays();
+        }
+      }
+
+      if (!alive )
+      {
+        nextGeneration();
+      }
     }
 
     //draw the world, boundaries, vehicles
@@ -96,6 +101,7 @@ function draw() {
     dir = 'DRAG'
   }
 
+  // Regactor into new document
   function drawWorld(){
     // draw boundaries
     for (let wall of walls){
@@ -105,6 +111,7 @@ function draw() {
     for (let gate of gates){
       gate.show();
     }
+
 
     // draw start and end
     ellipse(start.x,start.y,10)
@@ -197,10 +204,15 @@ function draw() {
       gates.push(new Boundary(end.x, end.y, end1.x, end1.y));
 
     }
-    gates.splice(gates.length-1,1)
+    // console.log(gates)
+    // let temp = gates.splice(gates.length-1,1)
+    // console.log(temp)
+    // console.log(gates)
+    // gates.push(temp)
+    // console.log(gates)
 
     // create starting boundary
-      walls.push(new Boundary(inner[0].x, inner[0].y, outer[0].x, outer[0].y));
+    // walls.push(new Boundary(inner[0].x, inner[0].y, outer[0].x, outer[0].y));
 
     // end and start
     start = createVector(95,250);
