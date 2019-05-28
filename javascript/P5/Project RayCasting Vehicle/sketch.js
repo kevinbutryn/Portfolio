@@ -26,6 +26,16 @@ function setup() {
   }
   center = createVector(width/ 2, height/2 );
   sliderLength = createSlider(1, 100, 1, 5)
+
+  button = createButton('killAll');
+  // button.position(19, 19);
+  button.mousePressed(killAll);
+
+  button1 = createButton('saveModel');
+  button1.mousePressed(saveBest);
+
+  button1 = createButton('LoadModel');
+  button1.mousePressed(loadBest);
 }
 
 
@@ -121,6 +131,49 @@ function draw() {
     for(let j = 0; j < POPSIZE; j++){
       vehicle[j].show();
     }
+  }
+
+  function killAll(){
+    for(let j = 0; j < POPSIZE; j++){
+      vehicle[j].alive = false;
+    }
+  }
+
+  // function saveBest(){
+  //   let v = vehicle[0];
+  //   // saveJSON(v.brain, 'brain.json');
+
+  //   await v.brain.save('downloads://my-model');
+  // }
+
+  function saveBest(){
+    let best = 0;
+    let bestscore = 0;
+    for(let j = 0; j < POPSIZE; j++){
+      if (vehicle[j].score > bestscore)
+      {
+        best = j;
+        bestscore = vehicle[j].score
+      }
+    }
+
+    console.log(vehicle)
+    console.log(best)
+    console.log(vehicle[best].score)
+    saveModel(best)
+  }
+  async function saveModel (best){
+    //you can use await in here
+    let v = vehicle[best];
+    // await v.brain.model.save('downloads://my-model');
+    await v.brain.model.save('file://model-1a');
+  }
+
+  async function loadBest (){
+    const loadedModel = await tf.loadModel("localstorage://my-model-1");
+    let v = new Vehicle(loadedModel)
+    vehicle[0].dispose();
+    vehicle[0] = v;
   }
 
   function createBoundaries(){

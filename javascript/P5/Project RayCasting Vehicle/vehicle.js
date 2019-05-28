@@ -1,20 +1,20 @@
 class Vehicle{
 
   constructor(brain) {
+    this.alive = true;
+    this.score = 0;
+    this.life = 150;
     this.pos = createVector(start.x,start.y);
     this.vel = createVector(0,-.5);	
     this.acc = createVector(0,0);
     this.w = 20;
     this.maxSpeed = 3;
     this.rays = [];
-    this.alive = true;
     this.maxspeed = 3;
     this.maxforce = .5; 
     this.STEERINGFORCE = .1;
     this.BREAKFORCE = .9;
     this.fitness = 0;
-    this.score = 0;
-    this.life = 150;
     if (brain){
       this.brain = brain.copy();
     }
@@ -166,8 +166,8 @@ class Vehicle{
       // console.log(gates.length)
       if(this.score > 19)
       {
-        console.log(inc)
-        console.log("---")
+        // console.log(inc)
+        // console.log("---")
       }
 
       ray.update([gates[inc]]);
@@ -176,7 +176,7 @@ class Vehicle{
       if (ray.pt){
         if (ray.d < this.w / 2){
           this.score++
-          this.life += 50
+          this.life += 75
         }
       } 
       
