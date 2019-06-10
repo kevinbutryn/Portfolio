@@ -186,6 +186,7 @@ class Vehicle{
       if (ray.pt){
         if (ray.d < this.w / 2){
           this.alive = false;
+          this.life = 0;
         }
       } 
     }

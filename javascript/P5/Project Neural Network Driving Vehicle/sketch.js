@@ -11,6 +11,10 @@ let center;
 let points = [];
 let Twidth = 40;
 let bestNum = 5;
+let champScore = 0;
+let champLaps = 0;
+let champLife = 0;
+let stop = false;
 
 
 
@@ -34,33 +38,76 @@ function setup() {
   button1 = createButton('saveModel');
   button1.mousePressed(saveBest);
 
-  button1 = createButton('LoadModel');
-  button1.mousePressed(loadBest);
+  button2 = createButton('LoadModel');
+  button2.mousePressed(loadBest);
+
+  button2 = createButton('Stop');
+  button2.mousePressed( function toggleStop()     
+    { 
+      if(stop)
+      {
+        stop  = false;
+      }
+      else 
+      {
+        stop = true;
+      }
+  });
 }
 
 
 function draw() {
-    background(0);
-    let speed = sliderLength.value();
-    for(let i = 0; i < speed; i++)
-    {
-      let alive = false;
-      for(let j = 0; j < POPSIZE; j++){
-        if(vehicle[j].alive){
-          alive = true;
-          // update particle and rays
-          vehicle[j].update(walls);
+  background(0);
+  let speed = sliderLength.value();
 
-          //show particle rays and DEBUG
-          //vehicle[j].showRays();
-        }
-      }
+  if (stop){
+    speed = 0;
+  }
 
-      if (!alive )
-      {
-        nextGeneration();
+  for(let i = 0; i < speed; i++)
+  {
+    let alive = false;
+    for(let j = 0; j < POPSIZE; j++){
+      if(vehicle[j].alive){
+        alive = true;
+        // update particle and rays
+        vehicle[j].update(walls);
+
+        //show particle rays and DEBUG
+        //vehicle[j].showRays();
       }
     }
+
+    if (!alive )
+    {
+      nextGeneration();
+    } 
+    }
+
+
+    champLaps = 0
+    champScore = 0
+    champLife = 0 
+
+    for(let j = 0; j < POPSIZE; j++){
+      
+      let veh = vehicle[j];
+      
+      if (veh.score > champScore)
+      {
+        champScore = veh.score
+      }
+
+      if (veh.life > champLife)
+      {
+        champLife = veh.life
+      }
+
+      
+    }
+
+    champLaps = Math.floor(champScore / gates.length)
+
 
     //draw the world, boundaries, vehicles
     drawWorld(); 
@@ -131,6 +178,17 @@ function draw() {
     for(let j = 0; j < POPSIZE; j++){
       vehicle[j].show();
     }
+
+
+    fill(255)
+    textSize(20);
+    text('Best:', 180, 350);
+    text('Score: ' + champScore, 180, 400);
+    text('Laps: ' + champLaps, 180, 450);
+    text('Life: ' + champLife, 180, 500);
+
+
+
   }
 
   function killAll(){
