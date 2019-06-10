@@ -4,8 +4,12 @@ let vehicle = [];
 let dir = '';
 let start,end;
 let brain;
+
 let SIGHT = 300;
 let POPSIZE = 100;
+let baseLife = 150;
+let gateBonus = 75;
+
 let mr = .1
 let center;
 let points = [];
@@ -78,15 +82,15 @@ function draw() {
       }
     }
 
-    if (!alive )
-    {
-      nextGeneration();
-    } 
+      if (!alive )
+      {
+        nextGeneration();
+      } 
     }
 
 
-    champLaps = 0
-    champScore = 0
+    
+
     champLife = 0 
 
     for(let j = 0; j < POPSIZE; j++){
@@ -109,6 +113,14 @@ function draw() {
     champLaps = Math.floor(champScore / gates.length)
 
 
+    if (champLaps == 5)
+    {
+      gateBonus -= 5
+      champLaps = 0
+      champScore = 0
+      console.log(gateBonus)
+      nextGeneration();
+    }
     //draw the world, boundaries, vehicles
     drawWorld(); 
 

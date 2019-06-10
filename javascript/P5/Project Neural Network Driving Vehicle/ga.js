@@ -5,11 +5,19 @@ function nextGeneration() {
     let best = calculateFitness();
     let temp = []
     for (let i = 0; i < best.length-1; i++) {
-      temp[i] = new Vehicle (best[i].brain);
+      temp.push(new Vehicle (best[i].brain));
+
+      for(let j = 0; j< 15; j++)
+      {
+        let child = new Vehicle(best[i].brain);
+        child.brain.mutate(mr);
+        temp.push(child)
+      }
     }
 
     for (let i = temp.length; i < POPSIZE; i++) {
-      temp[i] = pickOne();
+      // temp[i] = pickOne();
+      temp[i] = new Vehicle(); 
     }
 
     for (let i = 0; i < POPSIZE; i++) {
@@ -39,10 +47,8 @@ function nextGeneration() {
     let topFit = 0;
     let best = [];
     for (let v of vehicle) {
-      // v.calcFit();
-      v.score *= 100;
+      v.score *= pow(v.score, 2);
       let score = v.score 
-      sum += score ;
 
       if (score > topFit)
       {
@@ -64,13 +70,13 @@ function nextGeneration() {
 
     // console.log (topFit)
 
+    console.log("-------------")
     for (let v of vehicle) {
       // v.fitness = v.score / sum;
       v.fitness = v.score / topFit;
 
-      // console.log("-----")
       // console.log(v.score)
-      // console.log(v.fitness)
+      console.log(v.fitness)
     }
 
     //TODO MEMORY LEAK?

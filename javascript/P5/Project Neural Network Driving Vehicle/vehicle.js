@@ -3,14 +3,14 @@ class Vehicle{
   constructor(brain) {
     this.alive = true;
     this.score = 0;
-    this.life = 150;
+    this.life = baseLife;
     this.pos = createVector(start.x,start.y);
     this.vel = createVector(0,-.5);	
     this.acc = createVector(0,0);
     this.w = 20;
     this.maxSpeed = 3;
     this.rays = [];
-    this.maxspeed = 3;
+    this.maxspeed = 4;
     this.maxforce = .5; 
     this.STEERINGFORCE = .1;
     this.BREAKFORCE = .9;
@@ -164,11 +164,7 @@ class Vehicle{
       let inc = this.score % gates.length
       // console.log(inc)
       // console.log(gates.length)
-      if(this.score > 19)
-      {
-        // console.log(inc)
-        // console.log("---")
-      }
+
 
       ray.update([gates[inc]]);
       
@@ -176,7 +172,7 @@ class Vehicle{
       if (ray.pt){
         if (ray.d < this.w / 2){
           this.score++
-          this.life += 75
+          this.life += gateBonus
         }
       } 
       
@@ -222,13 +218,6 @@ class Vehicle{
     let output = this.brain.predict(inputs);
     return output.indexOf(Math.max(...output))
   }
-
-  calcFit(){
-
-    let d = dist(this.pos.x,this.pos.y, start.x,start.y)
-    this.fitness = d;
-  }
-
 
 }
 
