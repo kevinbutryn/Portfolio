@@ -14,6 +14,7 @@ function nextGeneration() {
         temp.push(child)
       }
     }
+    console.log (temp.length)
 
     for (let i = temp.length; i < POPSIZE; i++) {
       // temp[i] = pickOne();
@@ -70,13 +71,13 @@ function nextGeneration() {
 
     // console.log (topFit)
 
-    console.log("-------------")
+    // console.log("-------------")
     for (let v of vehicle) {
       // v.fitness = v.score / sum;
       v.fitness = v.score / topFit;
 
       // console.log(v.score)
-      console.log(v.fitness)
+      // console.log(v.fitness)
     }
 
     //TODO MEMORY LEAK?

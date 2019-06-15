@@ -5,7 +5,7 @@ let dir = '';
 let start,end;
 let brain;
 
-let SIGHT = 300;
+let SIGHT = 400;
 let POPSIZE = 100;
 let baseLife = 150;
 let gateBonus = 75;
