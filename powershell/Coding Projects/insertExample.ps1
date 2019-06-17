@@ -1,5 +1,6 @@
 ﻿clear
-$server = "KEVIN-PC\SQLEXPRESS"
+$server = "192.168.86.48\SQLEXPRESS"
+#$server = "KEVIN-PC\SQLEXPRESS"
 $Database = "db1"
 
 $Connection = New-Object System.Data.SQLClient.SQLConnection
