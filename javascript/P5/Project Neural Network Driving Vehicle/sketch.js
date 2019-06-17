@@ -1,6 +1,7 @@
 let walls = [];
 let gates = [];
 let vehicle = [];
+let vehicleDEAD = [];
 let dir = '';
 let start,end;
 let brain;
@@ -70,30 +71,29 @@ function draw() {
 
   for(let i = 0; i < speed; i++)
   {
-    let alive = false;
-    for(let j = 0; j < POPSIZE; j++){
-      if(vehicle[j].alive){
-        alive = true;
-        // update particle and rays
-        vehicle[j].update(walls);
+    for(let j = vehicle.length-1; j > -1 ; j--){
+      // update particle and rays
+      vehicle[j].update(walls);
 
-        //show particle rays and DEBUG
-        //vehicle[j].showRays();
+      //show particle rays and DEBUG
+      //vehicle[j].showRays();
+
+      if(!vehicle[j].alive){
+        vehicleDEAD.push(vehicle.splice(j,1)[0])
       }
     }
 
-      if (!alive )
+      if (vehicle.length == 0 )
       {
         nextGeneration();
+        vehicleDEAD = []
+        console.log(vehicle.length)
       } 
     }
 
-
-    
-
     champLife = 0 
 
-    for(let j = 0; j < POPSIZE; j++){
+    for(let j = 0; j < vehicle.length; j++){
       
       let veh = vehicle[j];
       
@@ -106,8 +106,6 @@ function draw() {
       {
         champLife = veh.life
       }
-
-      
     }
 
     champLaps = Math.floor(champScore / gates.length)
@@ -119,7 +117,8 @@ function draw() {
       champLaps = 0
       champScore = 0
       console.log(gateBonus)
-      nextGeneration();
+      killAll()
+      // nextGeneration();
     }
     //draw the world, boundaries, vehicles
     drawWorld(); 
@@ -187,7 +186,7 @@ function draw() {
     ellipse(end.x,end.y,10)
 
     //show particle
-    for(let j = 0; j < POPSIZE; j++){
+    for(let j = 0; j < vehicle.length; j++){
       vehicle[j].show();
     }
 
@@ -198,13 +197,14 @@ function draw() {
     text('Score: ' + champScore, 180, 400);
     text('Laps: ' + champLaps, 180, 450);
     text('Life: ' + champLife, 180, 500);
+    text('Alive: ' + vehicle.length, 180, 550);
 
 
 
   }
 
   function killAll(){
-    for(let j = 0; j < POPSIZE; j++){
+    for(let j = 0; j < vehicle.length; j++){
       vehicle[j].alive = false;
     }
   }

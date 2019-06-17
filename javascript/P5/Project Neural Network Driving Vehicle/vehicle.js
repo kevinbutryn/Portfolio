@@ -15,6 +15,7 @@ class Vehicle{
     this.STEERINGFORCE = .1;
     this.BREAKFORCE = .9;
     this.fitness = 0;
+    this.rgb = [255,255,255,100]
     if (brain){
       this.brain = brain.copy();
     }
@@ -64,9 +65,9 @@ class Vehicle{
   show(){
     // change color if dead
     if (this.alive){
-      fill(255,100);
+      fill(this.rgb[0],this.rgb[1],this.rgb[2],this.rgb[3]);
     } else{
-      fill(255,0,0);
+      fill(255,0,0,100);
     }
 
     //draw vehicle

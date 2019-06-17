@@ -3,57 +3,72 @@ function nextGeneration() {
     console.log('next generation');
     
     let best = calculateFitness();
-    let temp = []
-    for (let i = 0; i < best.length-1; i++) {
-      temp.push(new Vehicle (best[i].brain));
+    console.log (best.length)    
 
-      for(let j = 0; j< 15; j++)
+    let temp = []
+    for (let i = 0; i < best.length; i++) {
+      let child0 = new Vehicle (best[i].brain)
+      child0.rgb = [0,255,0]
+      temp.push(child0);
+      
+
+      for(let j = 0; j<= 14; j++)
       {
         let child = new Vehicle(best[i].brain);
         child.brain.mutate(mr);
-        temp.push(child)
+        child.rgb = [0,0,255]
+        //temp.push(child)
       }
     }
     console.log (temp.length)
 
     for (let i = temp.length; i < POPSIZE; i++) {
       // temp[i] = pickOne();
-      temp[i] = new Vehicle(); 
+      let child1 = new Vehicle();
+      child1.rgb = [255,0,0]
+      temp.push(child1)
     }
+    console.log (temp.length)
 
-    for (let i = 0; i < POPSIZE; i++) {
+    for (let i = 0; i < vehicleDEAD.length; i++) {
+      vehicleDEAD[i].brain.dispose();
+    }
+    for (let i = 0; i < vehicle.length; i++) {
       vehicle[i].brain.dispose();
     }
-
     vehicle = temp;
+    // console.log (temp)
     
   }
   
-  function pickOne() {
-    let index = 0;
-    let r = random(1);
-    while (r > 0) {
-      r = r - vehicle[index].fitness;
-      index++;
-    }
-    index--;
-    let temp = vehicle[index];
-    let child = new Vehicle(temp.brain);
-    child.brain.mutate(mr);
-    return child;
-  }
+  // function pickOne() {
+  //   let index = 0;
+  //   let r = random(1);
+  //   while (r > 0) {
+  //     r = r - vehicle[index].fitness;
+  //     index++;
+  //   }
+  //   index--;
+  //   let temp = vehicle[index];
+  //   let child = new Vehicle(temp.brain);
+  //   child.brain.mutate(mr);
+  //   return child;
+  // }
   
   function calculateFitness() {
     let sum = 0;
     let topFit = 0;
     let best = [];
-    for (let v of vehicle) {
+    for (let v of vehicleDEAD) {
       v.score *= pow(v.score, 2);
       let score = v.score 
 
       if (score > topFit)
       {
         topFit = score;
+
+        if (bestNum < best.length )
+        
         best = []
         // best.push(new Vehicle(v.brain))
         best.push(v)
@@ -72,7 +87,7 @@ function nextGeneration() {
     // console.log (topFit)
 
     // console.log("-------------")
-    for (let v of vehicle) {
+    for (let v of vehicleDEAD) {
       // v.fitness = v.score / sum;
       v.fitness = v.score / topFit;
 
