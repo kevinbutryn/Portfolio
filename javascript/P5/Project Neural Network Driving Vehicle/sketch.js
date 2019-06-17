@@ -7,7 +7,7 @@ let start,end;
 let brain;
 
 let SIGHT = 400;
-let POPSIZE = 100;
+let POPSIZE = 200;
 let baseLife = 150;
 let gateBonus = 75;
 
@@ -15,10 +15,11 @@ let mr = .1
 let center;
 let points = [];
 let Twidth = 40;
-let bestNum = 5;
+let bestNum = 4;
 let champScore = 0;
 let champLaps = 0;
 let champLife = 0;
+let generation = 0;
 let stop = false;
 
 
@@ -87,7 +88,6 @@ function draw() {
       {
         nextGeneration();
         vehicleDEAD = []
-        console.log(vehicle.length)
       } 
     }
 
@@ -116,7 +116,6 @@ function draw() {
       gateBonus -= 5
       champLaps = 0
       champScore = 0
-      console.log(gateBonus)
       killAll()
       // nextGeneration();
     }
@@ -198,6 +197,8 @@ function draw() {
     text('Laps: ' + champLaps, 180, 450);
     text('Life: ' + champLife, 180, 500);
     text('Alive: ' + vehicle.length, 180, 550);
+    text('GateBonus: ' + gateBonus, 180, 600);
+    text('Generation: ' + generation, 180, 650);
 
 
 

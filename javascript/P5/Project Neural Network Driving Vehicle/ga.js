@@ -1,9 +1,9 @@
 
 function nextGeneration() {
-    console.log('next generation');
+    // console.log('next generation');
+    generation++
     
-    let best = calculateFitness();
-    console.log (best.length)    
+    let best = calculateFitness();  
 
     let temp = []
     for (let i = 0; i < best.length; i++) {
@@ -12,15 +12,14 @@ function nextGeneration() {
       temp.push(child0);
       
 
-      for(let j = 0; j<= 14; j++)
+      for(let j = 0; j< 14; j++)
       {
         let child = new Vehicle(best[i].brain);
         child.brain.mutate(mr);
         child.rgb = [0,0,255]
-        //temp.push(child)
+        temp.push(child)
       }
     }
-    console.log (temp.length)
 
     for (let i = temp.length; i < POPSIZE; i++) {
       // temp[i] = pickOne();
@@ -28,7 +27,6 @@ function nextGeneration() {
       child1.rgb = [255,0,0]
       temp.push(child1)
     }
-    console.log (temp.length)
 
     for (let i = 0; i < vehicleDEAD.length; i++) {
       vehicleDEAD[i].brain.dispose();

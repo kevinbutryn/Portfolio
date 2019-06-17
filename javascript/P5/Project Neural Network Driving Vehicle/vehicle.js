@@ -8,7 +8,6 @@ class Vehicle{
     this.vel = createVector(0,-.5);	
     this.acc = createVector(0,0);
     this.w = 20;
-    this.maxSpeed = 3;
     this.rays = [];
     this.maxspeed = 4;
     this.maxforce = .5; 
