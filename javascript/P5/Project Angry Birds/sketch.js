@@ -43,6 +43,7 @@ function setup() {
         }
     }
   });
+  
     
   // add to world
   World.add(world, mouseConstraint); 
