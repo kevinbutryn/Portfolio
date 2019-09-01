@@ -24,6 +24,7 @@ class Vehicle{
     }
     this.createRays();
     this.updateRays(walls);
+    
   }
 
   applyForce(force){
