@@ -6,21 +6,23 @@ function nextGeneration() {
     let best = calculateFitness();  
 
     let temp = []
+    //best vehicles
     for (let i = 0; i < best.length; i++) {
       let child0 = new Vehicle (best[i].brain)
       child0.rgb = [0,255,0]
       temp.push(child0);
       
-
+      //children of best
       for(let j = 0; j< 14; j++)
       {
         let child = new Vehicle(best[i].brain);
-        child.brain.mutate(mr);
+        //child.brain.mutate(mr);
+        child.brain.foreMutate(mr, 10);
         child.rgb = [0,0,255]
         temp.push(child)
       }
     }
-
+    //random
     for (let i = temp.length; i < POPSIZE; i++) {
       // temp[i] = pickOne();
       let child1 = new Vehicle();
@@ -30,6 +32,9 @@ function nextGeneration() {
 
     for (let i = 0; i < vehicleDEAD.length; i++) {
       vehicleDEAD[i].brain.dispose();
+    }
+    for (let i = 0; i < best.length; i++) {
+      best[i].brain.dispose();
     }
     for (let i = 0; i < vehicle.length; i++) {
       vehicle[i].brain.dispose();
@@ -57,43 +62,13 @@ function nextGeneration() {
     let sum = 0;
     let topFit = 0;
     let best = [];
-    for (let v of vehicleDEAD) {
-      v.score *= pow(v.score, 2);
-      let score = v.score 
 
-      if (score > topFit)
-      {
-        topFit = score;
+    vehicleDEAD.sort((a, b) => (a.score < b.score) ? 1 : -1)
 
-        if (bestNum < best.length )
-        
-        best = []
-        // best.push(new Vehicle(v.brain))
-        best.push(v)
-        // console.log("-----")
-        // console.log(v.score)
-      }
-      if (score == topFit && bestNum > best.length)
-      {
-        // best.push(new Vehicle(v.brain))
-        // console.log (best)
-        best.push(v)
-      }
+    best = vehicleDEAD.splice(0,4);
 
-    }
 
-    // console.log (topFit)
-
-    // console.log("-------------")
-    for (let v of vehicleDEAD) {
-      // v.fitness = v.score / sum;
-      v.fitness = v.score / topFit;
-
-      // console.log(v.score)
-      // console.log(v.fitness)
-    }
-
-    //TODO MEMORY LEAK?
+    //TODO MEMORY LEAK? Fixed
     // console.log(best.length)
     // console.log(tf.memory())
     return best

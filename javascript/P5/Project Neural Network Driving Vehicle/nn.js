@@ -46,6 +46,41 @@ class NeuralNetwork {
         this.model.setWeights(mutatedWeights);
       });
     }
+
+    foreMutate(rate,num) {
+      tf.tidy(() => {
+        const weights = this.model.getWeights();
+        const mutatedWeights = [];
+        var numMutate = 0;
+        var flag = false;
+        for (let i = 0; i < weights.length; i++) {
+          let tensor = weights[i];
+          let shape = weights[i].shape;
+          let values = tensor.dataSync().slice();
+          for (let j = 0; j < values.length; j++) {
+            if (random(1) < rate) {
+              let w = values[j];
+              values[j] = w + randomGaussian();
+              numMutate++;
+            }
+          }
+          let newTensor = tf.tensor(values, shape);
+          mutatedWeights[i] = newTensor;
+          if (numMutate > num)
+          {
+            flag = true;
+          }
+
+          if (!flag && (i == weights.length -1))
+          {
+            i = 0;
+          }
+
+
+        }
+        this.model.setWeights(mutatedWeights);
+      });
+    }
   
     dispose() {
       this.model.dispose();

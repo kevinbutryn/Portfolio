@@ -87,7 +87,7 @@ function draw() {
       if (vehicle.length == 0 )
       {
         nextGeneration();
-        vehicleDEAD = []
+        vehicleDEAD = [];
       } 
     }
 
