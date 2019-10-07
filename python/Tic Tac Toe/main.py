@@ -59,45 +59,64 @@ def isBoardFull(board):
             return False
     return True
 
-def winningMove(board,player):
-    move = -1
+def winningMove(board,player,enemey):
 
     #vertical
     a = board[0::3]
-    print(a.count(player))
-    if a.count(player) = 2:
-        return a.index(" ")
+    #print(a)
     b = board[1::3]
-    print(b)
+    #print(b)
     c = board[2::3]
-    print(c)
-    print("-------")
+    #print(c)
+    if a.count(player) == 2 and a.count(enemey) == 0:
+        return a.index(" ") * 3
+    if b.count(player) == 2 and b.count(enemey) == 0:
+        return b.index(" ") * 3 + 1 
+    if c.count(player) == 2 and c.count(enemey) == 0:
+        return c.index(" ") * 3 + 2
+    
     #horizontal
     d = board[0:3]
-    print(d.count(player))
+    #print(d)
     e = board[3:6]
-    print(e)
+    #print(e)
     f = board[6:9]
-    print(f)
-    print("-------")
+    #print(f)
+    if d.count(player) == 2 and d.count(enemey) == 0:
+        return d.index(" ")
+    if e.count(player) == 2 and e.count(enemey) == 0:
+        return e.index(" ") + 3
+    if f.count(player) == 2 and f.count(enemey) == 0:
+        return f.index(" ") + 6
+    
     #diagnol
     g = board[0::4]
-    print(g)
+    #print(g)
     h = board[2:7:2]
-    print(h)
+    #print(h)
+    if g.count(player) == 2 and g.count(enemey) == 0:
+        return g.index(" ") * 4
+    if h.count(player) == 2 and h.count(enemey) == 0:
+        return h.index(" ") * 2 + 2
+
+    return False
 
 def checkBestMove(board,player):
     
-    
-    #check for winning move
-    #move = winningMove(board,player)
-
     if player == "X":
         enemey = "O"
     else:
         enemey = "X"
 
-    #check for block win
+    #check for winning move
+    move = winningMove(board,player,enemey)
+
+    if move:
+        return move
+
+    move = winningMove(board,enemey,player)
+
+    return move
 
 
 def chooseRandomEmpty(board):
@@ -117,21 +136,25 @@ def playRandAIvsRandAI(board):
     player = "X"
 
     while( not isBoardFull(board) and not checkWinner(board)[0]):
+        
         spot = chooseRandomEmpty(board)
+
+        print("*******************")
+        print("Best move for " + player +" is " + str(checkBestMove(board,player)) + " But chose " + str(spot))
+
         confirm = placePiece(board,spot,player)
 
         if (confirm):
             break
 
+        printBoard(board)
+
+        time.sleep(2)
+
         if (player == "X"):
             player = "O"
         else:
             player = "X"
-
-
-        print("*******************")
-        printBoard(board)
-        time.sleep(1)
 
     print("The Winner is " + checkWinner(board)[1])
     return
@@ -146,19 +169,9 @@ def playgame(board):
     return
 
 def main():
-    #board = createBoard()
-    #playRandAIvsRandAI(board)
+    board = createBoard()
+    playRandAIvsRandAI(board)
 
-    print("*****")
-    board = ["X","X","","","","","","",""]
-    d = board[0:3]
-    print(d)
-    e = board[3:6]
-    print(e)
-    f = board[6:9]
-    print(f)
-    print("*****")
-    winningMove(board,"X")
 
 
 
