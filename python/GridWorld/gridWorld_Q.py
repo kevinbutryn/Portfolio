@@ -108,7 +108,7 @@ class Agent:
 
     def chooseAction(self):
         # choose action with most expected value
-        mx_nxt_reward = 0
+        mx_nxt_reward = -1
         action = ""
 
         if np.random.uniform(0, 1) <= self.exp_rate:
@@ -145,6 +145,7 @@ class Agent:
                     self.Q_values[self.State.state][a] = reward
                 print("Game End Reward", reward)
                 for s in reversed(self.states):
+                    print (s)
                     current_q_value = self.Q_values[s[0]][s[1]]
                     reward = current_q_value + self.lr * (self.decay_gamma * reward - current_q_value)
                     self.Q_values[s[0]][s[1]] = round(reward, 3)
@@ -162,6 +163,7 @@ class Agent:
                 print("nxt state", self.State.state)
                 print("---------------------")
                 self.isEnd = self.State.isEnd
+            self.State.showBoard()
 
 
 if __name__ == "__main__":
@@ -171,4 +173,7 @@ if __name__ == "__main__":
 
     ag.play(50)
     print("latest Q-values ... \n")
-    print(ag.Q_values)
+    #print(ag.Q_values)
+    for q in ag.Q_values:
+        print("{} {}".format(q, ag.Q_values[q]))
+    
