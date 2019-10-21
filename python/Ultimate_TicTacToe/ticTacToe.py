@@ -1,5 +1,8 @@
 import numpy as np
-import pickle
+import joblib #import pickle
+import numba
+from numba import jit
+import shelve
 
 BOARD_ROWS = 3
 BOARD_COLS = 3
@@ -26,6 +29,15 @@ class State:
         return self.boardHash
 
     def createBoard(self):    
+        # x = np.array([[1,2,3], [4,5,6], [7,8,9], [10, 11, 12]])
+        # v = np.array([1, 0, 1])
+        # vv = np.tile(v, (4, 1))   # Stack 4 copies of v on top of each other
+        # print(vv)                 # Prints "[[1 0 1]
+        #                         #          [1 0 1]
+        #                         #          [1 0 1]
+        #                         #          [1 0 1]]"
+
+
         board = np.zeros((BOARD_ROWS, BOARD_COLS,BOARD_ROWS, BOARD_COLS))               
         return board
 
@@ -117,7 +129,8 @@ class State:
         self.isEnd = True        
         return 0
 
-    def availablePositions(self, lastPosition): # other part if flag = false or if in score array       
+    # @jit(nopython=True)
+    def availablePositions(self, lastPosition): #**********************************************************       
         positions = []
         flag = False
         for i in range(BOARD_ROWS):
@@ -301,7 +314,8 @@ class Player:
         boardHash = str(board.reshape(BOARD_COLS * BOARD_ROWS * BOARD_COLS * BOARD_ROWS))
         return boardHash
 
-    def chooseAction(self, positions, current_board, symbol):
+    # @jit(nopython=True)
+    def chooseAction(self, positions, current_board, symbol): #**********************************************************
         if np.random.uniform(0, 1) <= self.exp_rate:
             # take random action
             idx = np.random.choice(len(positions))
@@ -337,12 +351,14 @@ class Player:
 
     def savePolicy(self):
         fw = open('policy_' + str(self.name), 'wb')
-        pickle.dump(self.states_value, fw)
+        joblib.dump(self.states_value, fw) 
+        #pickle.dump(self.states_value, fw)
         fw.close()
 
     def loadPolicy(self, file):
         fr = open(file, 'rb')
-        self.states_value = pickle.load(fr)
+        self.states_value = joblib.load(fr)
+        #self.states_value = pickle.load(fr)
         fr.close()
 
 
@@ -377,13 +393,15 @@ if __name__ == "__main__":
 
     st = State(p1, p2)
     print("training...")
-    st.play(80000)
+    # st.play(50000)
 
-    p1.savePolicy()
-    p2.savePolicy()
+    # p1.savePolicy()
+    # p2.savePolicy()
+    
+    
+    
+    
     # play with human
-
-
     # p1 = Player("computer", exp_rate=0)
     # p1.loadPolicy("policy_p1")
 
@@ -393,8 +411,17 @@ if __name__ == "__main__":
     # st.play2()
 
 
-    #testing
-    # st.createBoard()
+    # testing
+    st.createBoard()
+    st.showBoard()
+    print(st.board)
+    print("----")
+    st.board[0,0] = 1
+    print(st.board[0,0] )
+
+    st.showBoard()
+
+
 
     
 
