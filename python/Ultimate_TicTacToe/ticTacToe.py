@@ -3,6 +3,7 @@ import joblib #import pickle
 import numba
 from numba import jit
 import shelve
+import time
 
 BOARD_ROWS = 3
 BOARD_COLS = 3
@@ -21,7 +22,10 @@ class State:
         self.lastPosition = (0,0,0,0) 
         self.p1Wins = 0
         self.p2Wins = 0    
-        self.pTies = 0   
+        self.pTies = 0
+        self.start = time.process_time()   
+        self.end = time.process_time()          
+        self.prev = time.process_time()
 
     # get unique hash of current board state
     def getHash(self):
@@ -50,20 +54,24 @@ class State:
         for i in range(BOARD_ROWS):
             if sum(board[i, :]) == 3:
                 self.score[lastx,lasty] = 1
+                self.board[lastx,lasty] = 1
                 # self.isEnd = True
                 return 1
             if sum(board[i, :]) == -3:
                 self.score[lastx,lasty] = -1
+                self.board[lastx,lasty] = -1
                 # self.isEnd = True
                 return -1
         # col
         for i in range(BOARD_COLS):
             if sum(board[:, i]) == 3:
                 self.score[lastx,lasty] = 1 
+                self.board[lastx,lasty] = 1
                 # self.isEnd = True
                 return 1
             if sum(board[:, i]) == -3:
                 self.score[lastx,lasty] = -1
+                self.board[lastx,lasty] = -1
                 # self.isEnd = True
                 return -1
         # diagonal
@@ -74,16 +82,20 @@ class State:
             # self.isEnd = True
             if diag_sum1 == 3 or diag_sum2 == 3:
                 self.score[lastx,lasty] = 1
+                self.board[lastx,lasty] = 1
                 return 1
             else:
                 self.score[lastx,lasty] = -1
+                self.board[lastx,lasty] = -1
                 return -1
 
+        #still spots open
         for i in range(BOARD_ROWS):
             for j in range(BOARD_COLS):
                 if board[i, j] == 0:
                     return None
         
+        #tie
         self.score[lastx,lasty] = 0
         return 0
 
@@ -193,6 +205,12 @@ class State:
     def play(self, rounds=100):
         for i in range(rounds):
             if i % 1000 == 0:
+                self.end = time.process_time()
+                print("=============")
+                print("total min: " + str((self.end - self.start) / 60))
+                print("current Time: " + str(self.end - self.prev))                
+                self.prev = self.end
+
                 print("Rounds {}".format(i))
                 print ("p1 wins"  + str(self.p1Wins)) 
                 print ("p2 wins"  + str(self.p2Wins))
@@ -388,15 +406,16 @@ class HumanPlayer:
 
 if __name__ == "__main__":
     # training
+     
     p1 = Player("p1")
     p2 = Player("p2")
 
     st = State(p1, p2)
     print("training...")
-    # st.play(50000)
+    st.play(5000)
 
-    # p1.savePolicy()
-    # p2.savePolicy()
+    p1.savePolicy()
+    p2.savePolicy()
     
     
     
@@ -412,14 +431,14 @@ if __name__ == "__main__":
 
 
     # testing
-    st.createBoard()
-    st.showBoard()
-    print(st.board)
-    print("----")
-    st.board[0,0] = 1
-    print(st.board[0,0] )
+    # st.createBoard()
+    # st.showBoard()
+    # print(st.board)
+    # print("----")
+    # st.board[0,0] = 1
+    # print(st.board[0,0] )
 
-    st.showBoard()
+    # st.showBoard()
 
 
 
