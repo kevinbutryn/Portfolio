@@ -1,9 +1,14 @@
 import numpy as np
-import joblib #import pickle
+#import joblib #import pickle #import shelve
+import klepto
+from klepto.archives import *
+
 import numba
 from numba import jit
-import shelve
+
 import time
+import gc
+
 
 BOARD_ROWS = 3
 BOARD_COLS = 3
@@ -51,15 +56,23 @@ class State:
         lastx = lastPosition[0]
         lasty = lastPosition[1]
         board = self.board[lastx,lasty]
+
+        # print(self.score)
+        # self.p2.loadPolicy2(self.score)
+
         for i in range(BOARD_ROWS):
             if sum(board[i, :]) == 3:
                 self.score[lastx,lasty] = 1
                 self.board[lastx,lasty] = 1
+                self.p1.loadPolicy2(self.score)
+                self.p2.loadPolicy2(self.score)
                 # self.isEnd = True
                 return 1
             if sum(board[i, :]) == -3:
                 self.score[lastx,lasty] = -1
                 self.board[lastx,lasty] = -1
+                self.p1.loadPolicy2(self.score)
+                self.p2.loadPolicy2(self.score)
                 # self.isEnd = True
                 return -1
         # col
@@ -67,11 +80,15 @@ class State:
             if sum(board[:, i]) == 3:
                 self.score[lastx,lasty] = 1 
                 self.board[lastx,lasty] = 1
+                self.p1.loadPolicy2(self.score)
+                self.p2.loadPolicy2(self.score)
                 # self.isEnd = True
                 return 1
             if sum(board[:, i]) == -3:
                 self.score[lastx,lasty] = -1
                 self.board[lastx,lasty] = -1
+                self.p1.loadPolicy2(self.score)
+                self.p2.loadPolicy2(self.score)
                 # self.isEnd = True
                 return -1
         # diagonal
@@ -83,10 +100,14 @@ class State:
             if diag_sum1 == 3 or diag_sum2 == 3:
                 self.score[lastx,lasty] = 1
                 self.board[lastx,lasty] = 1
+                self.p1.loadPolicy2(self.score)
+                self.p2.loadPolicy2(self.score)
                 return 1
             else:
                 self.score[lastx,lasty] = -1
                 self.board[lastx,lasty] = -1
+                self.p1.loadPolicy2(self.score)
+                self.p2.loadPolicy2(self.score)
                 return -1
 
         #still spots open
@@ -97,6 +118,8 @@ class State:
         
         #tie
         self.score[lastx,lasty] = 0
+        self.p1.loadPolicy2(self.score)
+        self.p2.loadPolicy2(self.score)
         return 0
 
     def winner(self): #whole game
@@ -204,12 +227,14 @@ class State:
 
     def play(self, rounds=100):
         for i in range(rounds):
-            if i % 1000 == 0:
+            if i % 100 == 0:
                 self.end = time.process_time()
                 print("=============")
                 print("total min: " + str((self.end - self.start) / 60))
                 print("current Time: " + str(self.end - self.prev))                
                 self.prev = self.end
+                print(len(self.p1.policy.archive.keys()))
+                print(self.p1.policy.archive)
 
                 print("Rounds {}".format(i))
                 print ("p1 wins"  + str(self.p1Wins)) 
@@ -222,7 +247,7 @@ class State:
                 # take action and upate board state
                 self.updateState(p1_action)
                 board_hash = self.getHash()
-                self.p1.addState(board_hash)
+                self.p1.addState(board_hash, self.score)
                 # check board status if it is end
 
                 win = self.winner()
@@ -243,7 +268,7 @@ class State:
                     p2_action = self.p2.chooseAction(positions, self.board, self.playerSymbol)
                     self.updateState(p2_action)
                     board_hash = self.getHash()
-                    self.p2.addState(board_hash)
+                    self.p2.addState(board_hash , self.score)
 
                     win = self.winner()
                     if win is not None:
@@ -327,6 +352,7 @@ class Player:
         self.exp_rate = exp_rate
         self.decay_gamma = 0.9
         self.states_value = {}  # state -> value
+        self.policy = file_archive('policy_' + name + '.txt')
 
     def getHash(self, board):
         boardHash = str(board.reshape(BOARD_COLS * BOARD_ROWS * BOARD_COLS * BOARD_ROWS))
@@ -353,31 +379,70 @@ class Player:
         return action
 
     # append a hash state
-    def addState(self, state):
-        self.states.append(state)
+    def addState(self, state, scoreBoard):
+        score = str(scoreBoard.reshape(3 * 3))
+        self.states.append((state, score))
 
     # at the end of game, backpropagate and update states value
-    def feedReward(self, reward):
-        for st in reversed(self.states):
+    def feedReward(self, reward): 
+        lastBoard = ""
+        for state in reversed(self.states):
+            st = state[0]
+            board = state[1]
+
+            if lastBoard != board:
+                self.loadPolicy2(board)
+                lastBoard = board
+
+            #do logic if board is same as last
             if self.states_value.get(st) is None:
                 self.states_value[st] = 0
             self.states_value[st] += self.lr * (self.decay_gamma * reward - self.states_value[st])
             reward = self.states_value[st]
 
     def reset(self):
-        self.states = []
+        self.states = []    
 
-    def savePolicy(self):
-        fw = open('policy_' + str(self.name), 'wb')
-        joblib.dump(self.states_value, fw) 
-        #pickle.dump(self.states_value, fw)
-        fw.close()
+    # def savePolicy2():
+    #     self.policy.dump() #save changes to file
+    #     self.policy.clear() #clear memory
+    #     gc.collect() #clear memory
 
-    def loadPolicy(self, file):
-        fr = open(file, 'rb')
-        self.states_value = joblib.load(fr)
-        #self.states_value = pickle.load(fr)
-        fr.close()
+    def loadPolicy2(self, scoreBoard):
+        if isinstance(scoreBoard,str):
+            score = scoreBoard
+        else:
+            score = str(scoreBoard.reshape(3 * 3))
+
+        keys = self.policy.archive.keys()
+        # print("@@")
+        # print(policy.archive)
+        # print(policy)        
+        # print(len(keys))
+        # print("@@")
+        if score not in keys: ## refactor later            
+            # print("score no existo")
+            self.policy[score] = {}
+
+            
+        self.policy.dump() #save changes to file
+        self.policy.clear() #clear memory
+        gc.collect() #clear memory
+        self.policy.load(score) #load score
+        self.states_value = self.policy[score]
+        return (self.policy[score])   
+
+    # def savePolicy(self):
+    #     fw = open('policy_' + str(self.name), 'wb')
+    #     joblib.dump(self.states_value, fw) 
+    #     #pickle.dump(self.states_value, fw)
+    #     fw.close()
+
+    # def loadPolicy(self, file):
+    #     fr = open(file, 'rb')
+    #     self.states_value = joblib.load(fr)
+    #     #self.states_value = pickle.load(fr)
+    #     fr.close()
 
 
 class HumanPlayer:
@@ -414,8 +479,10 @@ if __name__ == "__main__":
     print("training...")
     st.play(5000)
 
-    p1.savePolicy()
-    p2.savePolicy()
+    # p1.savePolicy()
+    # p2.savePolicy()
+
+
     
     
     
