@@ -2,8 +2,6 @@ import requests
 
 apikey = "brk4o8vrh5r9g3otirag"
 
-
-
 def API_quote(symbol):
     r = requests.get('https://finnhub.io/api/v1/quote?symbol=' + symbol + '&token=' + apikey)
     return r.json()
